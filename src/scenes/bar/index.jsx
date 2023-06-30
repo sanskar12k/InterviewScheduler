@@ -1,9 +1,9 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 
-import "./App.css";
+import "./Xcel.css";
 
-function App() {
+function Xcel() {
   const [data, setData] = useState([]);
 
   const handleFileUpload = (e) => {
@@ -44,9 +44,8 @@ function App() {
       )}
       <br />
       <br />
-      ... webstylepress ...
     </div>
   );
 }
 
-export default App;
+export default Xcel;
