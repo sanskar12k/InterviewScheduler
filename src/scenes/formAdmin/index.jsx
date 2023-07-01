@@ -29,7 +29,7 @@ const FormComponent = ({ onSubmit }) => {
   ];
   const interviewTracks = [
     "Technical Round",
-    "Manegerial Round",
+    "Managerial Round",
     "HR Round",
     // Add more interview tracks as needed
   ];
@@ -50,16 +50,36 @@ const FormComponent = ({ onSubmit }) => {
     setSelectedInterviewTrack(event.target.value);
   };
 
+  const getInterviewTrack = (InterviewTrack)=>{
+    if(InterviewTrack === 'Technical Round')
+    {
+      return 0;
+    }
+    else if(InterviewTrack === 'Managerial Round')
+    {
+      return 1;
+    }
+    else if(InterviewTrack === 'HR Round')
+    {
+      return 2;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
       // Perform filtering logic using the form values
       const filteredValues = {
-        iTrack: selectedInterviewTrack,
+        iTrack: getInterviewTrack(selectedInterviewTrack),
         specialisations: selectedSpecialisations,
         availabilityDate: values.availabilityDate,
         time: values.time
       }; // Replace with your actual filtering logic
+      console.log(filteredValues);
 
       fetch(`${host}/getCand`, {
         method: 'POST',

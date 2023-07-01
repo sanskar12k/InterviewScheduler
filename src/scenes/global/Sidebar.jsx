@@ -133,11 +133,11 @@ const Sidebar = () => {
               Data
             </Typography>
             <Item
-              title="Manage Team"
+              title="Candidates"
               to="/team"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
-              setSelected={setSelected}
+              setSelected={setSelected}s
             />
             <Item
               title="Contacts Information"
@@ -164,6 +164,13 @@ const Sidebar = () => {
             <Item
               title="Profile Form"
               to="/form"
+              icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Candidate Search Form"
+              to="/formAdmin"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
