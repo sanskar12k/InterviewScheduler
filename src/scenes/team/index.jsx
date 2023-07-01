@@ -15,6 +15,9 @@ import {Checkbox, Button} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import { useAuth } from "../../Context/AppContext";
+import Sidebar from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
   '& .MuiSwitch-track': {
@@ -136,7 +139,7 @@ const Team = () => {
       field: "actions",
       headerName: "Status",
       type:"actions",
-      flex: 0.5,
+      flex: 1,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         return [
@@ -153,7 +156,7 @@ const Team = () => {
     {
       field: "action",
       headerName: "Comment",
-      flex: 2,
+      flex: 1,
       type: "actions",
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -207,9 +210,12 @@ const Team = () => {
     // },
   ];
 
+  const { isSidebar, setIsSidebar } = useAuth();
   return (
     <>
-    
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
       <Header title="Candidates" subtitle="Managing the candidates" />
       <Box
@@ -244,6 +250,7 @@ const Team = () => {
         <DataGrid  rows={mockDataTeam} columns={columns} />
       </Box>
     </Box>
+    </div>
     </>
   );
 };

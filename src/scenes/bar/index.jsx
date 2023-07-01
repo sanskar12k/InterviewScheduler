@@ -1,11 +1,14 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import { useAuth } from "../../Context/AppContext";
+import Sidebar from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 import "./Xcel.css";
 
 function Xcel() {
   const [data, setData] = useState([]);
-
+  const { isSidebar, setIsSidebar } = useAuth();
   const handleFileUpload = (e) => {
     const reader = new FileReader();
     reader.readAsBinaryString(e.target.files[0]);
@@ -20,6 +23,10 @@ function Xcel() {
   };
 
   return (
+    <>
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
     <div className="App">
       <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
       {data.length > 0 && (
@@ -45,6 +52,8 @@ function Xcel() {
       <br />
       <br />
     </div>
+    </div>
+    </>
   );
 }
 

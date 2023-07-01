@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import { TextField, Button, Grid, Container, MenuItem, List, ListItem, ListItemText, Select, InputLabel, FormControl, Box } from '@mui/material';
 import Header from "../../components/Header";
+import { useAuth } from "../../Context/AppContext";
+import Sidebar from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 const FormComponent = ({ onSubmit }) => {
   const initialValues = {
@@ -12,8 +15,9 @@ const FormComponent = ({ onSubmit }) => {
   };
 
   const [selectedSpecialisations, setSelectedSpecialisations] = useState([]);
-  const [filteredCandidates, setFilteredCandidates] = useState([{name: "hello", branch: "hi"}]);
+  const [filteredCandidates, setFilteredCandidates] = useState([{name: "Sample Name", branch: "Sample Branch"}]);
   const [selectedInterviewTrack, setSelectedInterviewTrack] = useState("");
+  const { isSidebar, setIsSidebar } = useAuth();
 
   const specialisations = [
     "None",
@@ -96,7 +100,7 @@ const FormComponent = ({ onSubmit }) => {
         console.log(err);
       })
 
-      // checking new commit
+
       // setFilteredCandidates(filteredResults);
 
       onSubmit(values);
@@ -104,6 +108,10 @@ const FormComponent = ({ onSubmit }) => {
   });
 
   return (
+    <>
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
     <Container maxWidth="sm">
       <Header title="Filter Candidate" subtitle="Find the candidates"/>
@@ -203,12 +211,6 @@ const FormComponent = ({ onSubmit }) => {
             <ListItem key={index}>
               <ListItemText primary={candidate.name} secondary={`Branch: ${candidate.branch}`}/>
             </ListItem>
-            <ListItem key={index}>
-              <ListItemText primary={candidate.name} secondary={`Branch: ${candidate.branch}`}/>
-            </ListItem>
-            <ListItem key={index}>
-              <ListItemText primary={candidate.name} secondary={`Branch: ${candidate.branch}`}/>
-            </ListItem>
             </>
           ))}
         </List>
@@ -216,6 +218,8 @@ const FormComponent = ({ onSubmit }) => {
 
     </Container>
     </Box>
+    </div>
+    </>
   );
 };
 

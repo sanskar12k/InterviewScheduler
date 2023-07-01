@@ -3,10 +3,15 @@ import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataInvoices } from "../../data/mockData";
 import Header from "../../components/Header";
+import { useAuth } from "../../Context/AppContext";
+import Sidebar from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 const Invoices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { isSidebar, setIsSidebar } = useAuth();
+
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -43,6 +48,10 @@ const Invoices = () => {
   ];
 
   return (
+    <>
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
       <Header title="INVOICES" subtitle="List of Invoice Balances" />
       <Box
@@ -77,6 +86,8 @@ const Invoices = () => {
         <DataGrid checkboxSelection rows={mockDataInvoices} columns={columns} />
       </Box>
     </Box>
+    </div>
+    </>
   );
 };
 

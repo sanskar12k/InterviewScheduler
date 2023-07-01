@@ -3,15 +3,22 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import { useAuth } from "../../Context/AppContext";
+import Sidebar from "../global/Sidebar";
+import Topbar from "../global/Topbar";
 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-
+  const { isSidebar, setIsSidebar } = useAuth();
   const handleFormSubmit = (values) => {
     console.log(values);
   };
 
   return (
+    <>
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
 
@@ -125,6 +132,8 @@ const Form = () => {
         )}
       </Formik>
     </Box>
+    </div>
+    </>
   );
 };
 
