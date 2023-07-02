@@ -3,7 +3,7 @@ const express = require('express')
 const app = express();
 const User = require('./models/user');
 const Admin = require('./models/admin');
-const Time = require('./models/date');
+const {DateModel } = require('./models/date');
 const Candidate = require('./models/candidate');
 
 if(process.env.NODE_ENV !== 'production'){
@@ -105,27 +105,43 @@ const candi = [
 const seedDB = async () => {
 
    try{
-    const del = await User.deleteMany({});
-    const delAdmin = await Admin.deleteMany({});
-    // const date = await Time.deleteMany({});
-    const cand = await Candidate.deleteMany({});
-    for (let i = 0; i < users.length; i++) {
-        const user = new User ({fname:users[i].fname, email:users[i].email, iTrack:users[i].iTrack, specialisation:users[i].specialisation, password:users[i].password});
-        console.log(user);
-        await user.save();
-    }
-    for (let i = 0; i < admin.length; i++) {
-        const user = new Admin ({fname:admin[i].fname, email:admin[i].email, emp_id:admin[i].emp_id, password:admin[i].password});
-        console.log(user);
-        await user.save();
-    }
-    for (let i = 0; i < candi.length; i++) {
-        console.log("Cand", candi[i].lname);
-        const time = new Candidate ({fname:candi[i].fname, lname:candi[i].lname, email:candi[i].email, phNumber:candi[i].phNumber, specialisation:candi[i].specialisation});
-        console.log(time);
-        await time.save();
-    }
-    
+    // const del = await User.deleteMany({});
+    // const delAdmin = await Admin.deleteMany({});
+    // // const date = await Time.deleteMany({});
+    // const cand = await Candidate.deleteMany({});
+    // for (let i = 0; i < users.length; i++) {
+    //     const user = new User ({fname:users[i].fname, email:users[i].email, iTrack:users[i].iTrack, specialisation:users[i].specialisation, password:users[i].password});
+    //     console.log(user);
+    //     await user.save();
+    // }
+    // for (let i = 0; i < admin.length; i++) {
+    //     const user = new Admin ({fname:admin[i].fname, email:admin[i].email, emp_id:admin[i].emp_id, password:admin[i].password});
+    //     console.log(user);
+    //     await user.save();
+    // }
+    // for (let i = 0; i < candi.length; i++) {
+    //     console.log("Cand", candi[i].lname);
+    //     const time = new Candidate ({fname:candi[i].fname, lname:candi[i].lname, email:candi[i].email, phNumber:candi[i].phNumber, specialisation:candi[i].specialisation});
+    //     console.log(time);
+    //     await time.save();
+    // }
+    const cid = new mongoose.Types.ObjectId('64a15fd8dece4920b63bf77e');
+    const uid = new mongoose.Types.ObjectId('64a15fd7dece4920b63bf752');
+    // const candList = new InterviewModel({candidate:cid});
+    // console.log(candList)
+    const newCand = {
+        cand:cid
+    };
+    const user = await User.findById(uid);
+    user.candidateList.push(cid)
+    const candidate = await Candidate.findById(cid);
+    // candidate.interViewerList[0] = uid;
+    // console.log(candidate);
+    await user.save();
+    console.log(user);
+    // await candidate.save();
+    // await candList.save();
+
     }
     catch(e){
         console.log(e)

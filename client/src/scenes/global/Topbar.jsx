@@ -28,7 +28,6 @@ const Topbar = () => {
   }
 
   function signOut() {
-    console.log("hello");
     localStorage.removeItem("users");
     localStorage.removeItem("userType")
     return navigate("/Registration");

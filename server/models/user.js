@@ -1,7 +1,8 @@
 //INTERVIEWER 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { DateModel, InterviewModel } = require('./date')
+const { DateModel  } = require('./date');
+const Candidate = require('./candidate');
 
 const userSchema = new Schema({
     fname: {
@@ -33,18 +34,18 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    dateNdTime: {
-        type: [mongoose.Schema.Types.ObjectId],
+    dateNdTime:[ {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'DateModel',
-    },
+    }],
     availablity: {
         type: [Boolean],
         default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
-    candidateList: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'InterviewModel',
-    }
+    candidateList:[{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Candidate'
+    }]
 })
 
 

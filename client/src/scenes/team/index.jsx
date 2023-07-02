@@ -18,6 +18,9 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import { useEffect, useState } from "react";
+import Api from "../../api";
+
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
   '& .MuiSwitch-track': {
@@ -105,23 +108,57 @@ const IOSSwitch = styled((props) => (
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [candidates, setCandidates] = useState("");
+  const { isSidebar, setIsSidebar, user, getUser } = useAuth();
+  const [data, setData] = useState([]);
+  const uid = localStorage.getItem("users");
+  const getCandidates = async () => {
+    try {
+      console.log(user)
+      const res = await Api.get(`/user/${uid}/myCandidates`    )
+      console.log(res.data.candidates.candidateList);
+      if (res.status === 200) {
+      //   setTimeout(() => {
+      //     toast.success(user.data.message, {
+      //       position: "top-center",
+      //     });
+      //   }, 100);
+      console.log(res.data.candidates.candidateList);
+      setData(res.data.candidates.candidateList);
+      }
+      else {
+      }
+      // setBLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getUser();
+    getCandidates();
+ }, [])
+
+ const statusUpdate = async(id) =>{
+  try {
+    const uid = localStorage.getItem("users");
+    const res = await Api.patch(`/user/${uid}/cand/${id}/updateStatus`, {
+      status : 1
+    }) 
+    console.log(res);   
+  } catch (error) {
+    console.log(error)
+  }
+ }
   const columns = [
     { field: "Time", headerName: "Time" },
     {
-      field: "name",
+      field: "fname",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
-    // {
-    //   field: "age",
-    //   headerName: "Age",
-    //   type: "number",
-    //   headerAlign: "left",
-    //   align: "left",
-    // },
     {
-      field: "phone",
+      field: "phNumber",
       headerName: "Phone Number",
       flex: 1,
     },
@@ -131,7 +168,7 @@ const Team = () => {
       flex: 1,
     },
     {
-      field: "link",
+      field: "resumeLink",
       headerName: "Resume Link",
       flex: 1,
     },
@@ -139,15 +176,16 @@ const Team = () => {
       field: "actions",
       headerName: "Status",
       type:"actions",
-      flex: 1,
+      flex: 0.5,
       cellClassName: 'actions',
       getActions: ({ id }) => {
+
         return [
           <GridActionsCellItem
-            icon={<Checkbox  defaultChecked color="success"/>}
+            icon={<Checkbox  color="success"/>}
             label="Edit"
             className="textPrimary"
-            // onClick={handleEditClick(id)}
+            onClick={()=>{statusUpdate(id)}}
             color="inherit"
           />
         ];
@@ -156,7 +194,7 @@ const Team = () => {
     {
       field: "action",
       headerName: "Comment",
-      flex: 1,
+      flex: 1.5,
       type: "actions",
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -167,7 +205,7 @@ const Team = () => {
           label="Comment"
           multiline
           rows={1}
-          sx={{ m: 1, width: '50ch' }}
+          sx={{ m: 1, width: '25ch' }}
           margin="none"
           padding="normal"
           fullWidth
@@ -177,40 +215,9 @@ const Team = () => {
         ];
       },
     },
-    // {
-    //   field: "accessLevel",
-    //   headerName: "Access Level",
-    //   flex: 1,
-    //   renderCell: ({ row: { access } }) => {
-    //     return (
-    //       <Box
-    //         width="60%"
-    //         m="0 auto"
-    //         p="5px"
-    //         display="flex"
-    //         justifyContent="center"
-    //         backgroundColor={
-    //           access === "admin"
-    //             ? colors.greenAccent[600]
-    //             : access === "manager"
-    //             ? colors.greenAccent[700]
-    //             : colors.greenAccent[700]
-    //         }
-    //         borderRadius="4px"
-    //       >
-    //         {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-    //         {access === "manager" && <SecurityOutlinedIcon />}
-    //         {access === "user" && <LockOpenOutlinedIcon />}
-    //         <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-    //           {access}
-    //         </Typography>
-    //       </Box>
-    //     );
-    //   },
-    // },
   ];
 
-  const { isSidebar, setIsSidebar } = useAuth();
+
   return (
     <>
     <Sidebar isSidebar={isSidebar} />
@@ -247,7 +254,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid  rows={mockDataTeam} columns={columns} />
+        <DataGrid getRowId={(row) => row._id}  rows={data} columns={columns} />
       </Box>
     </Box>
     </div>

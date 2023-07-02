@@ -10,6 +10,25 @@ router.get('/allUser', (req, res) =>{
     res.send("Got all users");
 })
 
+router.post("/addCandidate", async(req, res)=>{
+    try {
+        const {data} = req.body;
+        for (let i = 0; i < data.length; i++) {
+            console.log("Cand", data[i].lname);
+            const time = new Candidate ({fname:data[i].fname, lname:data[i].lname, email:data[i].email, phNumber:data[i].phNumber, specialisation:data[i].specialisation});
+            console.log(time);
+            await time.save();
+        }
+        res.status(200).json({
+            "msg":"Candidates Added Successfully"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            "msg":"Failed to add candidates"
+        })
+    }
+})
 
 router.get("/getCand/:track", async(req, res) =>{
     try {
@@ -78,6 +97,17 @@ router.patch("/scheduleInterviews", async(req, res)=>{
     } catch (error) {
         console.log(error);
         res.status(400).json({error})
+    }
+})
+
+router.get("/allcandidate", async(req, res)=>{
+    try {
+        const cand = await Candidate.find({});
+        res.status(200).json({
+            candidates:cand
+        })        
+    } catch (error) {
+        console.log(error)
     }
 })
 

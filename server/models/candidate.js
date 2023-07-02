@@ -1,7 +1,7 @@
 //CANDIDATE 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const { DateModel, InterviewModel } = require('./date')
+const { DateModel} = require('./date')
 const User = require('./user');
 const candSchema = new Schema({
     fname: {
@@ -24,10 +24,10 @@ const candSchema = new Schema({
         type: String,
         require:true
     },
-    interViewerList: {
-        type: [mongoose.Schema.Types.ObjectId],
+    interViewerList: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-    },
+    }],
     GoNgo:{
         type:Number,
         default:-1
@@ -46,6 +46,9 @@ const candSchema = new Schema({
     interViewer:{
         type:Boolean,
         default:0
+    },
+    resumeLink:{
+        type:String
     }
 })
 

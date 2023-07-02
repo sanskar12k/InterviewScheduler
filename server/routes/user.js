@@ -244,6 +244,102 @@ router.get("/getInterviewer/:track/cand/:cand_id", async(req, res) =>{
     }
 })
 
+router.get("/Interviewer/:user_id", async(req , res)=>{
+    try {
+        const u_id = new mongoose.Types.ObjectId(req.params.user_id);
+        const user = await User.findById(u_id);
+        if(user.iTrack === 'Technical'){
+            user.round = 0;
+        }
+        else if(user.iTrack === 'Mangerial'){
+            user.round = 1;
+        }
+        else{
+            user.round = 2;
+        }
+        if(user){
+            return res.status(200).json({
+                user,
+                "msg":"Got User"
+            })
+        }
+        else{
+            return res.status(404).json({
+                "msg":"User not found"
+            })
+        }
+    } catch (error) {
+        return res.status(404).json({
+            "msg":"User not found"
+        })
+    }
+})
 
+router.get("/Admin/:user_id", async(req , res)=>{
+    try {
+        const u_id = new mongoose.Types.ObjectId(req.params.user_id);
+        const user = await Admin.findById(u_id);
+        if(user){
+            return res.status(200).json({
+                user,
+                "msg":"Got Admin"
+            })
+        }
+        else{
+            return res.status(404).json({
+                "msg":"User not found"
+            })
+        }
+    } catch (error) {
+        return res.status(404).json({
+            "msg":"User not found"
+        })
+    }
+})
+
+router.get("/:user_id/myCandidates", async(req, res) =>{
+    try {
+        const u_id = new mongoose.Types.ObjectId(req.params.user_id);
+        const dateNow = Date.now();
+        console.log(dateNow)
+        // const {iTrack, specialisation} = await User.findById(u_id).select("iTrack specialisation");
+        let candidates;
+        const track = await User.findById(u_id).select("iTrack");
+        if(track === "Technical"){
+            candidates = await User.findById(u_id).populate({
+                path:'candidateList',
+                match:  {
+                    "status.0":-1 // Replace 'fieldName' with the actual field name and 'i' with the desired index
+                  }
+            })
+            .select("candidateList")
+        }
+        else if(track === "Managerial"){
+            candidates = await User.findById(u_id).populate({
+                path:'candidateList',
+                match:  {
+                    "status.1":-1 // Replace 'fieldName' with the actual field name and 'i' with the desired index
+                  }
+            })
+            .select("candidateList")
+        }
+        else{
+            candidates = await User.findById(u_id).populate({
+                path:'candidateList',
+                match: {
+                    "status.2":-1 // Replace 'fieldName' with the actual field name and 'i' with the desired index
+                  }
+            })
+            .select("candidateList")
+        }
+        
+        console.log(candidates)
+        res.status(200).json({
+            candidates
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 module.exports = router;
