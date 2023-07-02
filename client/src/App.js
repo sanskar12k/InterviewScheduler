@@ -15,6 +15,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
 import Registration from "./scenes/Authentication/Registration";
 import { AppProvider } from "./Context/AppContext";
+import AutoGenerate from "./scenes/autoGenerate";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -32,6 +33,7 @@ function App() {
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />
               <Route path="/formAdmin" element={<FormAdmin />} />
+              <Route path="/autoGenerate" element={<AutoGenerate />} />
               <Route path="/bar" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />

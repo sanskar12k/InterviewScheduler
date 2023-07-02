@@ -13,7 +13,6 @@ router.get('/allUser', (req, res) =>{
 router.post("/addCandidate", async(req, res)=>{
     try {
         const {data} = req.body;
-        console.log(data)
         for (let i = 0; i < data.length; i++) {
             console.log("Cand", data[i].lname);
             const time = new Candidate ({fname:data[i].fname, lname:data[i].lname, email:data[i].email, phNumber:data[i].phNumber, specialisation:data[i].specialisation});
@@ -99,6 +98,17 @@ router.patch("/scheduleInterviews", async(req, res)=>{
     } catch (error) {
         console.log(error);
         res.status(400).json({error})
+    }
+})
+
+router.get("/allcandidate", async(req, res)=>{
+    try {
+        const cand = await Candidate.find({});
+        res.status(200).json({
+            candidates:cand
+        })        
+    } catch (error) {
+        console.log(error)
     }
 })
 

@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
 const candRoute = require('./routes/cand');
+const notifRoute = require('./routes/notif');
 const cors = require('cors');
 
 if(process.env.NODE_ENV !== 'production'){
@@ -36,6 +37,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/user', userRoute);
 app.use('/cand', candRoute);
+app.use('/notif', notifRoute);
 
 app.get('/', (req, res)=>{
     res.send('Test api succesfully')
