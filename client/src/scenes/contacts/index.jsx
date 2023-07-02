@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, esES } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
@@ -7,23 +7,61 @@ import { useTheme } from "@mui/material";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import { useEffect, useState } from "react";
+import Api from "../../api";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar, user, getUser } = useAuth();
+  const [allCand, setCand] = useState([]);
+  const getAllCandidate = async(req, res)=>{
+    try {
+      const res = await Api.get("/cand/allcandidate");
+      if(res.status === 200){
+        console.log(res.data);
+       const can = res.data.candidates;
+       let id = 1;
+        setCand(
+          res.data.candidates.map(e => {
+             e.username = `${e.fname} ${e.lname}`
+             e.id = id++;
+             for(let i = 0;i<3;i++){
+              if(e.status[i] === -1){
+                e.remark = `Waiting for R${i+1}`;
+                break;
+              }
+              else if(e.status[i] === 0){
+                e.remark = "Rejected";
+                break;
+              }
+             }
+             if(e.status[2] === 1){
+              e.remark = "Cleared"
+             }
+            return { ...e }
+          })
+        )
+      }
 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(()=>{
+    getAllCandidate()
+  }, [])
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
+    // { field: "registrarId", headerName: "Registrar ID" },
     {
-      field: "name",
+      field: "username",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "phone",
+      field: "phNumber",
       headerName: "Phone Number",
       flex: 1,
     },
@@ -38,7 +76,7 @@ const Contacts = () => {
       flex:1,
     },
     {
-      field:"status",
+      field:"remark",
       headerName:"Status",
       flex:1,
     }
@@ -87,7 +125,8 @@ const Contacts = () => {
             }}
           >
             <DataGrid
-              rows={mockDataContacts}
+              getRowId={(row) => row._id}
+              rows={allCand}
               columns={columns}
               components={{ Toolbar: GridToolbar }}
             />
