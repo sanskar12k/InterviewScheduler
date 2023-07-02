@@ -16,6 +16,16 @@ const Topbar = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [anchorEl, setAnchorEl] = useState(null); // Track the anchor element for the menu
+  const [anchorElNotif, setAnchorElNotif] = useState(null);
+
+  const handleOpenMenuNotif = (event) => {
+    setAnchorElNotif(event.currentTarget);
+  };
+
+  const handleCloseMenuNotif = () => {
+    setAnchorElNotif(null);
+  };
+
   const navigate=useNavigate();
 
 
@@ -32,6 +42,12 @@ const Topbar = () => {
     localStorage.removeItem("userType")
     return navigate("/");
   }
+
+  const notifications = [
+    { id: 1, name: 'John Doe', status: 'Accepted' },
+    { id: 2, name: 'Jane Smith', status: 'Rejected' },
+    { id: 3, name: 'Michael Johnson', status: 'Accepted' },
+  ];
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
@@ -53,9 +69,30 @@ const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <IconButton>
-          <NotificationsOutlinedIcon />
+        <IconButton 
+        aria-controls="notification-menu"
+        aria-haspopup="true"
+        style={{ color: '#ffffff' }}
+        onClick={handleOpenMenuNotif}
+        >
+          <NotificationsOutlinedIcon/>
         </IconButton>
+        <Menu
+          id="notification-menu"
+          anchorEl={anchorElNotif}
+          keepMounted
+          open={Boolean(anchorElNotif)}
+          onClose={handleCloseMenuNotif}
+          // style={{ marginTop: '16px' }}
+          sx={{borderRadius: "0", margin: "auto", paddingTop:"0px"}}
+        >
+          {notifications.map((notification) => (
+          <MenuItem key={notification.id} sx={{color:"red", backgroundColor: "white"}}>
+              <span>{notification.name}</span>
+              <span>{notification.status}</span>
+          </MenuItem>
+        ))}
+        </Menu>
         <IconButton>
           <SettingsOutlinedIcon />
         </IconButton>

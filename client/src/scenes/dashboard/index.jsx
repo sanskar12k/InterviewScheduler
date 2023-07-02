@@ -221,9 +221,9 @@ const Dashboard = () => {
                   Recent Interviews
                 </Typography>
               </Box>
-              {mockTransactions.map((transaction, i) => (
+              {mockTransactions.map((idx, i) => (
                 <Box
-                  key={`${transaction.txId}-${i}`}
+                  key={`${idx.txId}-${i}`}
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
@@ -231,24 +231,18 @@ const Dashboard = () => {
                   p="15px"
                 >
                   <Box>
-                    <Typography
-                      color={colors.greenAccent[500]}
-                      variant="h5"
-                      fontWeight="600"
-                    >
-                      {transaction.txId}
-                    </Typography>
                     <Typography color={colors.grey[100]}>
-                      {transaction.user}
+                      {idx.user}
                     </Typography>
                   </Box>
-                  <Box color={colors.grey[100]}>{transaction.date}</Box>
+                  <Box color={colors.grey[100]}>{idx.round}</Box>
+                  <Box color={colors.grey[100]}>{idx.specialisation}</Box>
                   <Box
                     backgroundColor={colors.greenAccent[500]}
                     p="5px 10px"
                     borderRadius="4px"
                   >
-                    ${transaction.cost}
+                    {idx.status}
                   </Box>
                 </Box>
               ))}
