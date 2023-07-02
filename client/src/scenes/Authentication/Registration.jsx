@@ -107,7 +107,7 @@ const Registration = () => {
         setEmail('');
         setSelectedInterviewTrack('');
         setSelectedSpecialisations([]);
-        navigate('/team')
+        navigate('/Dashboard')
       }
       else {
         // // console.log(user)
@@ -155,7 +155,7 @@ const Registration = () => {
       localStorage.setItem("users", user.data.userExist._id);
         setPasswordLog('');
         setEmailLog('');
-        navigate('/team');
+        navigate('/Dashboard');
       }
       else {
         // // console.log(user)

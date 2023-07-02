@@ -21,13 +21,17 @@ import { useAuth } from "../../Context/AppContext";
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const handleClick = () => {
+    setSelected(title);
+  };
+
   return (
     <MenuItem
       active={selected === title}
       style={{
         color: colors.grey[100],
       }}
-      onClick={() => setSelected(title)}
+      onClick={handleClick}
       icon={icon}
     >
       <Typography>{title}</Typography>
@@ -42,6 +46,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const {user} = useAuth();
+  const userType = localStorage.getItem('userType');
+
   return (
     <Box
       sx={{
@@ -120,7 +126,7 @@ const Sidebar = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/Dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -133,13 +139,16 @@ const Sidebar = () => {
             >
               Data
             </Typography>
-            <Item
+            {
+              userType==="Interviewer"?
+              <Item
               title="Candidates"
               to="/team"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
-              setSelected={setSelected}s
-            />
+              setSelected={setSelected}
+              />:<></>
+            }
             <Item
               title="Contacts Information"
               to="/contacts"
@@ -147,13 +156,17 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
+
+            {
+              userType==='Admin'?
+              <Item
               title="Invoices Balances"
               to="/invoices"
               icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />:<></>
+            }
 
             <Typography
               variant="h6"
@@ -162,20 +175,26 @@ const Sidebar = () => {
             >
               Pages
             </Typography>
-            <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
+            {
+              userType==='Admin'?
+              <Item
               title="Candidate Search Form"
               to="/formAdmin"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />:<></>
+            }
+            {
+              userType==='Admin'?
+              <Item
+              title="Auto Assign Interviews"
+              to="/autoGenerate"
+              icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />:<></>
+            }
             <Item
               title="Calendar"
               to="/calendar"
@@ -198,13 +217,16 @@ const Sidebar = () => {
             >
               Charts
             </Typography>
-            <Item
+            {
+              userType==='Admin'?
+              <Item
               title="Bar Chart"
               to="/bar"
               icon={<BarChartOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+              />:<></>
+            }
             <Item
               title="Pie Chart"
               to="/pie"
