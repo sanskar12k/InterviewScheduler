@@ -125,7 +125,7 @@ const seedDB = async () => {
     //     console.log(time);
     //     await time.save();
     // }
-    const cid = new mongoose.Types.ObjectId('64a15fd8dece4920b63bf77e');
+    const cid = new mongoose.Types.ObjectId('64a15fd9dece4920b63bf792');
     const uid = new mongoose.Types.ObjectId('64a15fd7dece4920b63bf752');
     // const candList = new InterviewModel({candidate:cid});
     // console.log(candList)

@@ -155,7 +155,7 @@ router.patch('/:user_id/cand/:cand_id/updateStatus', async(req, res)=>{
 
 //updateStatus
 // /user/comment
-router.patch('/:user_id/cand/:cand_id/comment', async(req, res)=>{
+router.post('/:user_id/cand/:cand_id/comment', async(req, res)=>{
     try {
         const {user_id, cand_id} = req.params;
         const{comment} = req.body;
@@ -342,4 +342,65 @@ router.get("/:user_id/myCandidates", async(req, res) =>{
     }
 })
 
+
+//Interview taken
+router.patch("/:user_id/taken/:cand_id", async(req, res)=>{
+    try {
+        const uid = new mongoose.Types.ObjectId(req.params.user_id);
+        const cid = new mongoose.Types.ObjectId(req.params.cand_id);
+        const track = await User.findById(uid).select("iTrack");
+        const updateUser = await User.findByIdAndUpdate(uid, { $pull: { candidateList: cid }})
+        let cand = await Candidate.findById(cid);
+        if(track === 'Technical'){
+            if(cand.status[0] === -1)cand.status[0] = 0;
+       }
+       else if(track === 'Managerial'){
+        if(cand.status[1] === -1)cand.status[1] = 0;
+       }
+      else{
+        if(cand.status[2] === -1)cand.status[2] = 0;
+      }
+       await cand.save();
+       res.status(200).json({
+           cand,
+           "msg":"Interview taken"
+       })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            error
+        })
+    }
+})
+
 module.exports = router;
+
+
+
+router.get("/getCand/:track", async(req, res) =>{
+    try {
+        const {track} = req.params;
+        let cand = [];
+        if(track === 'Technical Round'){
+             cand = await Candidate.find({'status.0':-1})
+        }
+        else if(track === 'Managerial Round'){
+             cand = await Candidate.find({'status.1':-1})
+        }
+       else{
+         cand = await Candidate.find({'status.2':-1})
+       }
+        console.log(cand.length);
+        res.status(200).json({
+            cand,
+            "cand.length":cand.length,
+            "msg":"List generated Successfully"
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            error
+        })
+    }
+})

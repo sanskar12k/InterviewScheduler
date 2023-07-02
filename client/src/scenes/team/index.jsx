@@ -149,6 +149,34 @@ const Team = () => {
     console.log(error)
   }
  }
+
+ const handleSelectionChange = async(selectionModel) => {
+  try {
+    const uid = localStorage.getItem("users");
+    const res = await Api.patch(`/user/${uid}/taken/${selectionModel}`);
+    if(res.status === 200){
+      console.log(res.data)
+      console.log("Interview Taken");
+    }
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+ const addComment = async(e, cid) =>{
+  e.preventDefault();
+  try {
+    const uid = localStorage.getItem("users");
+    const res = await Api.post(`/user/${uid}/cand/${cid}/comment`,{
+      comment:e.target.value
+    })
+    if(res.status === 200){
+      console.log(res.data);
+    }
+  } catch (error) {
+    console.log(error)
+  }
+ }
   const columns = [
     { field: "Time", headerName: "Time" },
     {
@@ -208,6 +236,7 @@ const Team = () => {
           sx={{ m: 1, width: '25ch' }}
           margin="none"
           padding="normal"
+          onBlur={(e)=>{addComment(e, id)}}
           fullWidth
           // variant="outline"
         />
@@ -254,7 +283,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid getRowId={(row) => row._id}  rows={data} columns={columns} />
+        <DataGrid checkboxSelection onSelectionModelChange={handleSelectionChange} getRowId={(row) => row._id}  rows={data} columns={columns} />
       </Box>
     </Box>
     </div>
