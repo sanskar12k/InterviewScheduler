@@ -271,13 +271,13 @@ export const mockTransactions = [
     user: "johndoe",
     round: "Technical",
     specialisation: "CS",
-    status: "Accepted"
+    comments: "Can be selected"
   },
   {
     user: "johndoe",
     round: "Technical",
     specialisation: "CS",
-    status: "Accepted"
+    comments: "definitely need him"
   },
   
 ];
