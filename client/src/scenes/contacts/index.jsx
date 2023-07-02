@@ -11,7 +11,7 @@ import Topbar from "../global/Topbar";
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { isSidebar, setIsSidebar } = useAuth();
+  const { isSidebar, setIsSidebar, user, getUser } = useAuth();
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
