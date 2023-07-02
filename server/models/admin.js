@@ -18,13 +18,10 @@ const adminSchema = new Schema({
     phNumber: {
         type: String
     },
-    emp_id:{
-        type:Number, 
-    },
     password:{
         type: String,
         required: true
     }
 })
 
-module.exports = mongoose.model('Admin', adminSchema);
+module.exports = mongoose.model('AdminModel', adminSchema);
