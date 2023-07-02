@@ -1,4 +1,13 @@
-import { Box, IconButton, useTheme, FormControl, Select, Menu, MenuItem, ClickAwayListener } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  useTheme,
+  FormControl,
+  Select,
+  Menu,
+  MenuItem,
+  ClickAwayListener,
+} from "@mui/material";
 import { useState, useContext } from "react";
 import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
@@ -9,7 +18,6 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
-
 
 const Topbar = () => {
   const theme = useTheme();
@@ -26,8 +34,7 @@ const Topbar = () => {
     setAnchorElNotif(null);
   };
 
-  const navigate=useNavigate();
-
+  const navigate = useNavigate();
 
   function handleMenuClick(event) {
     setAnchorEl(event.currentTarget); // Set the anchor element when the menu is clicked
@@ -39,14 +46,15 @@ const Topbar = () => {
 
   function signOut() {
     localStorage.removeItem("users");
-    localStorage.removeItem("userType")
+    localStorage.removeItem("userType");
     return navigate("/");
   }
 
   const notifications = [
-    { id: 1, name: 'John Doe', status: 'Accepted' },
-    { id: 2, name: 'Jane Smith', status: 'Rejected' },
-    { id: 3, name: 'Michael Johnson', status: 'Accepted' },
+    { id: 1, name: "John Doe", status: "Accepted" },
+    { id: 2, name: "Jane Smith", status: "Rejected" },
+    { id: 3, name: "Michael Johnson", status: "Accepted" },
+    { id: 4, name: "Nikhil Singh", status: "Technical Round Cleared" }
   ];
 
   return (
@@ -69,13 +77,13 @@ const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
-        <IconButton 
-        aria-controls="notification-menu"
-        aria-haspopup="true"
-        style={{ color: '#ffffff' }}
-        onClick={handleOpenMenuNotif}
+        <IconButton
+          aria-controls="notification-menu"
+          aria-haspopup="true"
+          style={{ color: "#ffffff" }}
+          onClick={handleOpenMenuNotif}
         >
-          <NotificationsOutlinedIcon/>
+          <NotificationsOutlinedIcon />
         </IconButton>
         <Menu
           id="notification-menu"
@@ -83,15 +91,30 @@ const Topbar = () => {
           keepMounted
           open={Boolean(anchorElNotif)}
           onClose={handleCloseMenuNotif}
-          // style={{ marginTop: '16px' }}
-          sx={{borderRadius: "0", margin: "auto", paddingTop:"0px"}}
+          sx={{ borderRadius: "0", margin: "auto" }}
+          MenuListProps={{ sx: { py: 0 } }}
         >
           {notifications.map((notification) => (
-          <MenuItem key={notification.id} sx={{color:"red", backgroundColor: "white"}}>
-              <span>{notification.name}</span>
-              <span>{notification.status}</span>
-          </MenuItem>
-        ))}
+            <MenuItem
+              key={notification.id}
+              sx={{
+                // width:"100%",
+                color: "white",
+                backgroundColor: "#18608a",
+                display: "flex",
+                justifyContent: "space-between",
+                backgroundColor:
+                  notification.status === "Accepted"
+                    ? "green"
+                    : notification.status === "Rejected"
+                    ? "red"
+                    : "#18608a"
+              }}
+            >
+              <span style={{ padding: "8px" }}>{notification.name}</span>
+              <span style={{ padding: "8px" }}>{notification.status}</span>
+            </MenuItem>
+          ))}
         </Menu>
         <IconButton>
           <SettingsOutlinedIcon />
@@ -105,11 +128,11 @@ const Topbar = () => {
           onClose={handleMenuClose}
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "left"
+            horizontal: "left",
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "left"
+            horizontal: "left",
           }}
         >
           <MenuItem onClick={signOut}>Sign out</MenuItem>
@@ -120,5 +143,3 @@ const Topbar = () => {
 };
 
 export default Topbar;
-
-
