@@ -30,6 +30,7 @@ router.post("/addCandidate", async(req, res)=>{
     }
 })
 
+
 router.get("/getCand/:track", async(req, res) =>{
     try {
         const {track} = req.params;

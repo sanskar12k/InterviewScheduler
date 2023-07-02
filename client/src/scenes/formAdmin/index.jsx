@@ -171,6 +171,7 @@ const FormComponent = ({ onSubmit }) => {
               name="availabilityDate"
               label="Availability Date"
               type="date"
+              // style={{color:"white"}}
               value={formik.values.availabilityDate}
               onChange={formik.handleChange}
               InputLabelProps={{
@@ -195,8 +196,8 @@ const FormComponent = ({ onSubmit }) => {
               }}
             />
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained">
+          <Grid item xs={12} style={{textAlign:"center"}}>
+            <Button type="submit" variant="contained" style={{backgroundColor:"#016064",fontWeight:"bold"}}>
               Search
             </Button>
           </Grid>

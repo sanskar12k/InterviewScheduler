@@ -3,8 +3,11 @@ import * as XLSX from "xlsx";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import Api from "../../api";
+// import moduleName from 'module';
 
 import "./Xcel.css";
+const host = 'http://localhost:8000';
 
 function Xcel() {
   const [data, setData] = useState([]);
@@ -19,8 +22,32 @@ function Xcel() {
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
       setData(parsedData);
+      console.log(parsedData);
     };
+
+
   };
+  const handleDataUpload = async () => {
+    // setBLoading(true);
+    try {
+      console.log("start")
+      const user = await Api.post('/cand/addCandidate',
+       { data:data},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      )
+      console.log("Ernd")
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  
 
   return (
     <>
@@ -29,6 +56,7 @@ function Xcel() {
       <Topbar setIsSidebar={setIsSidebar} />
     <div className="App">
       <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+      <button onClick={handleDataUpload}>Upload</button>
       {data.length > 0 && (
         <table className="table">
           <thead>
