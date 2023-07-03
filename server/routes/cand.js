@@ -119,15 +119,22 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
         const cid = new mongoose.Types.ObjectId(req.params.cand);
         const cand = await Candidate.findById(cid);
         const{goStatus} = req.body;
-        if(goStatus === 0){
+        let iv_name;
+        console.log(goStatus)
+        if(goStatus === '0'){
             cand.GoNgo = 0;
             await cand.save(); 
+            res.status(200).json({
+                cand,
+                "msg":"Candidate has been rejected"
+            })
             //Notification
         }
         else{
              //Assign new interviewer
              if(cand.status[1] === -1){ //last round was technical
                 //Assign managerial
+                console.log("managerial");
               const manager =  await User.aggregate([ //number of interviewTaken and no of specialisation
             {
                 $match: {
@@ -150,7 +157,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                 }
             }
         ])
-            
+            console.log(manager);
            for(let i = 0;i<manager.length;i++){
             const interviewer  = await User.findById(manager[i]._id).populate("dateNdTime");
             if(interviewer.dateNdTime.length > 0){ //if he has available time slot
@@ -162,14 +169,71 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                 interviewer.availablity[idx] = 0;
                 interviewer.dateNdTime.splice(0, 1);
                 interviewer.interviewTaken += 1;
+                iv_name = interviewer.fname + interviewer.lname;
                 await cand.save();
                 await interviewer.save();
+                break; //break after interviewer assigned
             }
            }
-
+           res.status(200).json({
+            "msg":`${cand.fname} ${cand.lname} has been assigned ${iv_name}.`
+           })
              }
              else if(cand.status[2] === -1){ //last round was managerial
                 //Assign HR
+                console.log("HR")
+                const hr =  await User.aggregate([ //number of interviewTaken and no of availablity slot
+                {
+                    $match: {
+                        iTrack: "HR"
+                    }
+                },
+                {
+                    $project: {
+                        fname: 1,
+                        lname:1,
+                        availablity: 1,
+                        iTrack: 1,
+                        dateLen: { $size: "$dateNdTime" }
+                    }
+                },
+                {
+                    $sort: {
+                        interviewTaken: 1,
+                        dateLen: 1
+                    }
+                }
+            ])
+                console.log(hr)
+               for(let i = 0;i<hr.length;i++){
+                const interviewer  = await User.findById(hr[i]._id).populate("dateNdTime");
+                if(interviewer.dateNdTime.length > 0){ //if he has available time slot
+                    cand.interViewer = 1;
+                    cand.interViewerList[2] = interviewer._id;
+                    cand.dateNdTime = interviewer.dateNdTime[0]._id;
+                    const idx = interviewer.dateNdTime[0].time; 
+                    interviewer.candidateList.push(cand._id);
+                    interviewer.availablity[idx] = 0;
+                    interviewer.dateNdTime.splice(0, 1);
+                    interviewer.interviewTaken += 1;
+                    iv_name = interviewer.fname + interviewer.lname;
+                    await cand.save();
+                    await interviewer.save();
+                    break; //break after interviewer assigned
+                }
+               }
+               //Notification
+               res.status(200).json({
+                "msg":`${cand.fname} ${cand.lname} has been assigned ${iv_name}.`
+               })
+             }
+             else{
+                cand.status[2] = 10;
+                await cand.save();
+                res.status(200).json({
+                    "msg":"Candidate has been selected"
+                })
+                //Notifcation 
              }
         }
     } catch (error) {

@@ -159,7 +159,8 @@ const Team = () => {
  const handleSelectionChange = async(selectionModel) => {
   try {
     const uid = localStorage.getItem("users");
-    const res = await Api.patch(`/user/${uid}/taken/${selectionModel}`);
+    console.log(selectionModel[0])
+    const res = await Api.patch(`/user/${uid}/taken/${selectionModel[0]}`);
     if(res.status === 200){
       console.log(res.data)
       console.log("Interview Taken");

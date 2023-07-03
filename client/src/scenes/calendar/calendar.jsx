@@ -131,8 +131,10 @@ const Calendar = () => {
       <Sidebar isSidebar={isSidebar} />
       <div className="content">
         <Topbar setIsSidebar={setIsSidebar} />
-        <Box m="20px">
-          <Header title="Calendar" subtitle="Full Calendar Interactive Page" />
+    <Box m="20px">
+      <Header title="CALENDAR"/>
+      
+      <Box display="flex" justifyContent="space-between">
 
           <Box display="flex" justifyContent="space-between">
 
@@ -238,8 +240,11 @@ const Calendar = () => {
 
           </Box>
         </Box>
+        </Box>
       </div>
+     
     </>
+    
   );
 };
 

@@ -37,7 +37,10 @@ const Contacts = () => {
               }
              }
              if(e.status[2] === 1){
-              e.remark = "Cleared"
+              e.remark = "Waiting for final result";
+             }
+             if(e.status[2] === 10){
+              e.remark = "Selected"
              }
             return { ...e }
           })
@@ -89,8 +92,7 @@ const Contacts = () => {
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
           <Header
-            title="CONTACTS"
-            subtitle="List of Contacts for Future Reference"
+            title="CANDIDATE LIST"
           />
           <Box
             m="40px 0 0 0"
