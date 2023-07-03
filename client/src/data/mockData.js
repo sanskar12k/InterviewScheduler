@@ -271,22 +271,31 @@ export const mockTransactions = [
     user: "johndoe",
     round: "Technical",
     specialisation: "CS",
+    status1: "Accepted",
+    status2: "Accepted",
+    status3: "Accepted",
     round1: "Can be selected",
     round2: "Did pretty good",
     round3: "Not so sure"
   },
   {
-    user: "johndoe",
+    user: "john cena",
     round: "Technical",
     specialisation: "CS",
+    status1: "Rejected",
+    status2: "Rejected",
+    status3: "Rejected",
     round1: "Can be selected",
     round2: "Did pretty good",
     round3: "Not so sure"
   },
   {
-    user: "johndoe",
+    user: "harsh",
     round: "Technical",
     specialisation: "CS",
+    status1: "Accepted",
+    status2: "Accepted",
+    status3: "Accepted",
     round1: "Can be selected",
     round2: "Did pretty good",
     round3: "Not so sure"

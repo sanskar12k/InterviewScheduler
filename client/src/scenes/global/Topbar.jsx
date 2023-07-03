@@ -111,7 +111,7 @@ const Topbar = () => {
           sx={{ borderRadius: "0", margin: "auto" }}
           MenuListProps={{ sx: { py: 0 } }}
         >
-          {notifications.map((notification, idx) => (
+          {notifications.slice(0,4).map((notification, idx) => (
             <MenuItem
               key={idx}
               sx={{

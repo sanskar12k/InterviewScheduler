@@ -28,15 +28,42 @@ import Api from "../../api";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { isSidebar, setIsSidebar } = useAuth();
+  const { isSidebar, setIsSidebar, user } = useAuth();
   const [actionData, setActionData] = useState(mockTransactions);
   const [notifications, setNotifications] = useState([]);
   const userType = localStorage.getItem('userType');
-  const [iTaken, setITaken] = useState(0);
-  const user_id = localStorage.getItem('users');
+  const [interviewTaken, setInterviewTaken] = useState(0);
+  const [interviewsLeft, setInterviewsLeft] = useState(0);
 
-  const fetchData = async ()=>{
-    
+  const fetchInterviewers = async ()=>{
+    try {
+      console.log("start");
+      const users = await Api.get(
+        "/user/getAllInterviewers",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const interviewers = users.data;
+
+      let newData = 0;
+      let newDataLeft = 0;
+      for(let i=0; i<interviewers.length; i++)
+      {
+        newData = newData + interviewers[i].interviewTaken;
+        newDataLeft = interviewers[i].candidateList.length - interviewers[i].interviewTaken;
+      }
+      setInterviewTaken(newData);
+      setInterviewsLeft(newDataLeft);
+      console.log(interviewTaken);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const fetchNotifs = async ()=>{
@@ -53,7 +80,7 @@ const Dashboard = () => {
         }
       );
       const data = user.data.notif;
-      setNotifications(data.reverse().slice(0,4));
+      setNotifications(data.reverse());
       // console.log(user);
       // console.log(user.data.notif);
       console.log(notifications);
@@ -65,6 +92,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchNotifs();
+    fetchInterviewers();
     // eslint-disable-next-line
   }, []);
 
@@ -182,13 +210,13 @@ const Dashboard = () => {
                   variant="h4"
                   sx={{ fontSize: "2rem", fontWeight: "bold" }}
                 >
-                  12,361
+                  {userType==='Admin'?interviewTaken:user.interviewTaken}
                 </Typography>
                 <Typography
                   variant="subtitle2"
                   sx={{ fontSize: "0.8rem", textTransform: "uppercase" }}
                 >
-                  Interviews Taken
+                  {userType==='Admin'?<>INTERVIEWS DONE</>:<>INTERVIEWS TAKEN BY YOU</>}
                 </Typography>
               </Box>
             </Box>
@@ -215,7 +243,7 @@ const Dashboard = () => {
                   variant="h4"
                   sx={{ fontSize: "2rem", fontWeight: "bold" }}
                 >
-                  12,361
+                  {userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -337,6 +365,9 @@ const Dashboard = () => {
                       <TableCell sx={{textAlign:"center"}}>Name</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status3</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
