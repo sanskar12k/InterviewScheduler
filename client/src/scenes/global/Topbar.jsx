@@ -47,7 +47,7 @@ const Topbar = () => {
       setNotifications(data.reverse().slice(0,4));
       // console.log(user);
       // console.log(user.data.notif);
-      // console.log(notifications);
+      console.log(notifications);
       console.log("Ernd");
     } catch (err) {
       console.log(err);
@@ -111,7 +111,7 @@ const Topbar = () => {
           sx={{ borderRadius: "0", margin: "auto" }}
           MenuListProps={{ sx: { py: 0 } }}
         >
-          {notifications.map((notification, idx) => (
+          {notifications.slice(0,4).map((notification, idx) => (
             <MenuItem
               key={idx}
               sx={{
@@ -121,9 +121,9 @@ const Topbar = () => {
                 display: "flex",
                 justifyContent: "space-between",
                 backgroundColor:
-                  notification.status === "Accepted"
+                  notification.status[0] === "A"
                     ? "green"
-                    : notification.status === "Rejected"
+                    : notification.status[0] === "R"
                     ? "red"
                     : "#18608a"
               }}

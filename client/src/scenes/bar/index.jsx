@@ -175,7 +175,7 @@ function Xcel() {
       <div className="content">
         <Topbar setIsSidebar={setIsSidebar} />
         <div className="App">
-        <Header  title="DATABASE UPLOAD" subtitle="Full Database Upload Page" />
+        <Header  title="DATABASE UPLOAD" />
           <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} style={{backgroundColor:"#141b2d",marginTop:"0px"}}/>
           <div className="buttontoUpload">
           <button onClick={handleDataUpload}>Upload</button>

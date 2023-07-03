@@ -316,6 +316,18 @@ router.get("/Interviewer/:user_id", async (req, res) => {
     }
 })
 
+router.get("/getAllInterviewers", async (req, res)=>{
+    try {
+        const interviewers = await User.find({});
+        res.status(200).json(interviewers);
+    } catch (error) {
+        res.status(404).json({
+            "msg": "Cannot fetch"
+        })
+        console.log(error);
+    }
+})
+
 router.get("/Admin/:user_id", async (req, res) => {
     try {
         const u_id = new mongoose.Types.ObjectId(req.params.user_id);

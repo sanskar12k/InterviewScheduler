@@ -235,6 +235,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            
             <Item
               title="FAQ Page"
               to="/faq"

@@ -129,18 +129,15 @@ const AutoGenerate = ({ onSubmit }) => {
 
   return (
     <>
-      <Sidebar isSidebar={isSidebar} />
-      <div className="content">
-        <Topbar setIsSidebar={setIsSidebar} />
-        <Box m="20px">
-          <Container maxWidth="sm">
-            <Header
-              title="AUTO ASSIGN INTERVIEWS"
-              // subtitle="Automatatically assign interviewers to candidates"
-            />
-            <form onSubmit={formik.handleSubmit}>
-              <Grid container spacing={2}>
-                {/* <Grid item xs={12}>
+    <Sidebar isSidebar={isSidebar} />
+    <div className="content">
+      <Topbar setIsSidebar={setIsSidebar} />
+    <Box m="20px">
+    <Container maxWidth="sm">
+      <Header title="AUTO ASSIGN INTERVIEWS"/>
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container spacing={2}>
+          {/* <Grid item xs={12}>
             <TextField
               fullWidth
               id="name"
