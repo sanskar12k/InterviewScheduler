@@ -94,7 +94,7 @@ const Calendar = () => {
       <div className="content">
         <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
-      <Header title="Calendar" subtitle="Full Calendar Interactive Page" />
+      <Header title="CALENDAR" subtitle="Full Calendar Interactive Page" />
       
       <Box display="flex" justifyContent="space-between">
 

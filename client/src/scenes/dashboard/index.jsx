@@ -29,10 +29,10 @@ const Dashboard = () => {
           {/* HEADER */}
           <Box
             display="flex"
-            justifyContent="space-between"
+            justifyContent="center"
             alignItems="center"
           >
-            <Header title="DASHBOARD" />
+            <Header title="DASHBOARD"/>
 
             {/* <Box>
               <Button

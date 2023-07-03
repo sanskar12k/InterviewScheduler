@@ -86,8 +86,8 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  Interviewer
+                <Typography variant="h3" color={colors.grey[100]} fontWeight={"bold"}>
+                  {localStorage.getItem("userType")}
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -220,7 +220,7 @@ const Sidebar = () => {
             {
               userType==='Admin'?
               <Item
-              title="Bar Chart"
+              title="Database Upload"
               to="/bar"
               icon={<BarChartOutlinedIcon />}
               selected={selected}
