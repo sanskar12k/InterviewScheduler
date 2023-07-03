@@ -1,4 +1,4 @@
-import {  Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Dashboard from "./scenes/dashboard";
 import Team from "./scenes/team";
 import Contacts from "./scenes/contacts";
@@ -6,9 +6,9 @@ import Bar from "./scenes/bar";
 import Form from "./scenes/form";
 import FormAdmin from "./scenes/formAdmin";
 import Line from "./scenes/line";
-import Pie from "./scenes/pie";
+import Chat from "./scenes/pie";
 import FAQ from "./scenes/faq";
-import Invoices from './scenes/invoices'
+import Invoices from "./scenes/invoices";
 import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
@@ -24,9 +24,9 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-          <AppProvider>
+        <AppProvider>
           <div className="app">
-              <Routes>
+            <Routes>
               <Route path="/" element={<Registration />} />
               <Route path="/team" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />
@@ -35,15 +35,15 @@ function App() {
               <Route path="/formAdmin" element={<FormAdmin />} />
               <Route path="/autoGenerate" element={<AutoGenerate />} />
               <Route path="/bar" element={<Bar />} />
-              <Route path="/pie" element={<Pie />} />
+              <Route path="/pie" element={<Chat />} />
               <Route path="/line" element={<Line />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/geography" element={<Geography />} />
               <Route path="/Dashboard" element={<Dashboard />} />
-              </Routes>
-            </div>
-          </AppProvider>
+            </Routes>
+          </div>
+        </AppProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
