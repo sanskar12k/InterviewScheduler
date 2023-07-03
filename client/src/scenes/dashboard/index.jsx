@@ -53,6 +53,7 @@ const Dashboard = () => {
 
       let newData = 0;
       let newDataLeft = 0;
+      console.log(interviewers);
       for(let i=0; i<interviewers.length; i++)
       {
         newData = newData + interviewers[i].interviewTaken;
@@ -93,6 +94,8 @@ const Dashboard = () => {
   useEffect(() => {
     fetchNotifs();
     fetchInterviewers();
+    console.log('user:');
+    console.log(user);
     // eslint-disable-next-line
   }, []);
 
@@ -243,7 +246,8 @@ const Dashboard = () => {
                   variant="h4"
                   sx={{ fontSize: "2rem", fontWeight: "bold" }}
                 >
-                  {userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)}
+                  {/* {userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)} */}
+                  {user?(userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)):0}
                 </Typography>
                 <Typography
                   variant="subtitle2"
