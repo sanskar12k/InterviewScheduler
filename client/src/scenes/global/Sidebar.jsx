@@ -157,14 +157,14 @@ const Sidebar = () => {
               <></>
             )}
             <Item
-              title="Contacts Information"
+              title="Candidates Status"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
-            {userType === "Admin" ? (
+            {/* {userType === "Admin" ? (
               <Item
                 title="Invoices Balances"
                 to="/invoices"
@@ -174,7 +174,7 @@ const Sidebar = () => {
               />
             ) : (
               <></>
-            )}
+            )} */}
 
             <Typography
               variant="h6"
