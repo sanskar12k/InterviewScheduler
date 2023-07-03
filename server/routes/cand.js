@@ -15,7 +15,7 @@ router.post("/addCandidate", async(req, res)=>{
         const {data} = req.body;
         for (let i = 0; i < data.length; i++) {
             console.log("Cand", data[i].lname);
-            const time = new Candidate ({fname:data[i].fname, lname:data[i].lname, email:data[i].email, phNumber:data[i].phNumber, specialisation:data[i].specialisation});
+            const time = new Candidate ({fname:data[i].fname, lname:data[i].lname, email:data[i].email, phNumber:data[i].phNumber, specialisation:data[i].specialisation, resumeLink:data[i].resumeLink});
             console.log(time);
             await time.save();
         }
@@ -121,7 +121,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
         const{goStatus} = req.body;
         let iv_name;
         console.log(goStatus)
-        if(goStatus === '0'){
+        if(goStatus === '0' || goStatus===0){
             cand.GoNgo = 0;
             await cand.save(); 
             res.status(200).json({
@@ -168,7 +168,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                 interviewer.candidateList.push(cand._id);
                 interviewer.availablity[idx] = 0;
                 interviewer.dateNdTime.splice(0, 1);
-                interviewer.interviewTaken += 1;
+                // interviewer.interviewTaken += 1;
                 iv_name = interviewer.fname + interviewer.lname;
                 await cand.save();
                 await interviewer.save();
@@ -215,7 +215,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                     interviewer.candidateList.push(cand._id);
                     interviewer.availablity[idx] = 0;
                     interviewer.dateNdTime.splice(0, 1);
-                    interviewer.interviewTaken += 1;
+                    // interviewer.interviewTaken += 1;
                     iv_name = interviewer.fname + interviewer.lname;
                     await cand.save();
                     await interviewer.save();

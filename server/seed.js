@@ -120,12 +120,12 @@ const seedDB = async () => {
         console.log(user);
         await user.save();
     }
-    for (let i = 0; i < candi.length; i++) {
-        console.log("Cand", candi[i].lname);
-        const time = new Candidate ({fname:candi[i].fname, lname:candi[i].lname, email:candi[i].email, phNumber:candi[i].phNumber, specialisation:candi[i].specialisation});
-        console.log(time);
-        await time.save();
-    }
+    // for (let i = 0; i < candi.length; i++) {
+    //     console.log("Cand", candi[i].lname);
+    //     const time = new Candidate ({fname:candi[i].fname, lname:candi[i].lname, email:candi[i].email, phNumber:candi[i].phNumber, specialisation:candi[i].specialisation});
+    //     console.log(time);
+    //     await time.save();
+    // }
     // const cid = new mongoose.Types.ObjectId('64a15fd9dece4920b63bf792');
     // const uid = new mongoose.Types.ObjectId('64a15fd7dece4920b63bf752');
     // // const candList = new InterviewModel({candidate:cid});

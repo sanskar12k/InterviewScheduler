@@ -192,7 +192,7 @@ function Xcel() {
                     <TableCell align="right" sx={{textAlign:"center"}}>Last Name</TableCell>
                     <TableCell align="right" sx={{textAlign:"center"}}>Email</TableCell>
                     <TableCell align="right" sx={{textAlign:"center"}}>Phone Number</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Resume Link</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{backgroundColor:"#141b2d"}}>

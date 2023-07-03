@@ -400,7 +400,10 @@ router.patch("/:user_id/taken/:cand_id", async (req, res) => {
         const cid = new mongoose.Types.ObjectId(req.params.cand_id);
         const track = await User.findById(uid).select("iTrack");
         console.log(track)
-        const updateUser = await User.findByIdAndUpdate(uid, { $pull: { candidateList: cid } })
+        const updateUser = await User.findByIdAndUpdate(uid, { $pull: { candidateList: cid }});
+        const inUser = await User.findById(uid);
+        inUser.interviewTaken += 1;
+        await inUser.save();
         let cand = await Candidate.findById(cid);
         cand.interViewer = 0;
         if (track.iTrack === 'Technical') {
@@ -474,6 +477,7 @@ router.get("/:user_id/allAvailability", async(req, res)=>{
 
 router.post("/assignInterviewers", async (req, res) => {
     try {
+        let numOfCandidates = 0;
         //Sorted on the basis of number of speciality and then on number of availablity
         const interviewers = await User.aggregate([ //number of available slot and no of specialisation
             {
@@ -499,6 +503,8 @@ router.post("/assignInterviewers", async (req, res) => {
                 }
             }
         ])
+        const list = [];
+
         for (let i = 0; i < interviewers.length; i++) {
             const spl = interviewers[i].specialisation;
             for (let j = 0; j < spl.length; j++) {
@@ -509,15 +515,29 @@ router.post("/assignInterviewers", async (req, res) => {
                           cand[k].interViewerList[0] = interviewers[i]._id; //Technical Round
                           cand[k].interViewer = 1; //Interviewer alloted
                           cand[k].dateNdTime = iv.dateNdTime[0]._id;
-      
+                          const {date, time} = iv.dateNdTime[0];
                           const idx = iv.dateNdTime[0].time; 
                           iv.candidateList.push(cand[k]._id);
                           iv.availablity[idx] = 0;
-                          iv.dateNdTime.splice(0, 1);
-                          iv.interviewTaken += 1;
+                          const rmvTime = await User.updateOne(
+                            { _id: interviewers[i]._id }, // Specify the document you want to update by its _id
+                            { $pull: { dateNdTime:  iv.dateNdTime[0]._id} } // Use $pull to remove the specified element from the arrayField
+                          )
+                        //   iv.interviewTaken += 1;
                           await iv.save();
                           await cand[k].save();
                           console.log(iv)
+                          numOfCandidates += 1;
+                        //   console.log(date, time)
+                        const ndate = new Date(date);
+                          const inter = {
+                            Date:ndate.toISOString().slice(0,10),
+                            Time:`${time} - ${time + 1}`,
+                            Interviewer : `${iv.fname}`,
+                            Candidate: `${cand[k].fname}  ${cand[k].lname}`,
+                            Specialisation: cand[k].specialisation
+                          }
+                          list.push(inter)
                          //  const update = await User.findByIdAndUpdate(interviewers[i]._id,
                           //     { $pull: { dateNdTime: { $eq: { $arrayElemAt: ['$dateNdTime', i] } } } }
                           //   )
@@ -530,17 +550,22 @@ router.post("/assignInterviewers", async (req, res) => {
         res.status(200).json({
             // interViewer
             interviewers,
-            length: interviewers.length
+            length: interviewers.length,
+            list,
+            "msg": ` Technical Round interviews have been scheduled for ${numOfCandidates} candidates`
         })
     } catch (error) {
         console.log(error)
+        res.status(400).json({
+            "msg": "Failed to schedule interviews"
+        })
     }
 })
 
 router.get("/adminDashboard", async(req, res)=>{
     try {
         // Candidates whose interviewer has not been assigned and first round has been done  and has not been selected yet
-         const candidate = await Candidate.find({interViewer:0, 'status.0':{$ne:-1}}).sort({"dateNdTime.time":1});
+         const candidate = await Candidate.find({interViewer:0, 'status.0':{$ne:-1}, 'status.2':{$ne: 10}, GoNgo: {$ne: 0}}).sort({"dateNdTime.time":1});
          let cand = [];
          for(let i= 0;i<candidate.length;i++){
             let status1 = "Not Taken", status2 = "Not Taken", status3 = "Not Taken";

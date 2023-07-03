@@ -1,8 +1,11 @@
+import * as React from "react";
 import { Box, Button, IconButton, Typography, useTheme,
   TableCell,
   TableHead,
   Table,
   Paper,
+  Snackbar,
+  Alert,
   TableRow,
   TableContainer,
   TableBody } from "@mui/material";
@@ -32,6 +35,18 @@ const Dashboard = () => {
   const [actionData, setActionData] = useState(mockTransactions);
   const userType = localStorage.getItem('userType');
   const [candList, setCand] = useState();
+  const [alert, setAlert] = React.useState(false);
+  const [alertMsg, setAlertMsg] = React.useState("Candidate's status marked as GO!");
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
+  };
+
+
   const handleGoOnclick = async (row, column)=>{
     console.log(row);
     console.log(column);
@@ -39,14 +54,18 @@ const Dashboard = () => {
       return e !== row;
     }))
 
+    
+
     const data = {
       name: row.user,
       iTrack: row.round,
       specialisation: row.specialisation,
-      status: `Accepted for ${row.round}`
+      status: `Accepted in ${row.round}`
     }
 
     console.log(data);
+
+
 
     try {
       const cid = candList[column]._id;
@@ -56,7 +75,8 @@ const Dashboard = () => {
       if(res.status === 200){
         console.log(res)
       }
-      
+      setAlertMsg(res.data.msg);
+      setAlert(true);
       console.log("start");
       const user = await Api.post(
         "/notif/addNotif",
@@ -72,6 +92,8 @@ const Dashboard = () => {
       console.log("Ernd");
     } catch (err) {
       console.log(err);
+      setAlertMsg("Failed to update status!");
+      setAlert(true);
     }
   }
   const handleNoGoOnclick = async (row, column)=>{
@@ -91,6 +113,15 @@ const Dashboard = () => {
     console.log(data);
 
     try {
+      const cid = candList[column]._id;
+      const res = await Api.patch(`/cand/${cid}/goStatus`,{
+        goStatus:0
+      })
+      if(res.status === 200){
+        console.log(res)
+      }
+      setAlertMsg(res.data.msg);
+      setAlert(true);
       console.log("start");
       const user = await Api.post(
         "/notif/addNotif",
@@ -106,6 +137,8 @@ const Dashboard = () => {
       console.log("Ernd");
     } catch (err) {
       console.log(err);
+      setAlertMsg("Failed to update status!");
+      setAlert(true);
     }
   }
 
@@ -274,15 +307,19 @@ const Dashboard = () => {
               <Table sx={{ margin:"auto" }} aria-label="simple table">
                 <TableHead>
                   <TableRow sx={{backgroundColor:"#3e4396"}}>
-                    <TableCell sx={{textAlign:"center"}}>Name</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Comments</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Status</TableCell>
+                  <TableCell sx={{textAlign:"center"}}>Name</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 3</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{backgroundColor:"#141b2d"}}>
-                  {mockNotification.map((row, column) => (
+                  {actionData.map((row, column) => (
                     <TableRow
                       key={row}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -360,6 +397,15 @@ const Dashboard = () => {
           </Box>
         </Box>
       </div>
+      <Snackbar open={alert} autoHideDuration={6000} onClose={handleAlertClose}>
+        <Alert
+          onClose={handleAlertClose}
+          severity={alertMsg==="Failed to update status!"?"error":"success"}
+          sx={{ width: "100%" }}
+        >
+        {alertMsg}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

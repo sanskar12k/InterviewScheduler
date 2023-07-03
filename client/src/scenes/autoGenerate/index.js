@@ -46,7 +46,7 @@ const AutoGenerate = ({ onSubmit }) => {
   const [selectedSpecialisations, setSelectedSpecialisations] = useState([]);
   const [selectedInterviewTrack, setSelectedInterviewTrack] = useState("");
   const { isSidebar, setIsSidebar } = useAuth();
-
+  const [list,  setList] = useState([])
   const specialisations = [
     "None",
     "Bachelors: Computer Science",
@@ -60,9 +60,9 @@ const AutoGenerate = ({ onSubmit }) => {
     // Add more specialisations as needed
   ];
   const interviewTracks = [
-    "Technical",
-    "Managerial",
-    "HR",
+    "IIT KGP",
+    "NIT Rourkela",
+    "IIT BHU"
     // Add more interview tracks as needed
   ];
 
@@ -92,6 +92,7 @@ const AutoGenerate = ({ onSubmit }) => {
   });
 
   const [alert, setAlert] = React.useState(false);
+  const [alertMsg, setAlertMsg] = React.useState("Interviews have been scheduled!");
 
   const handleAlertOpen = () => {
     setAlert(true);
@@ -108,9 +109,21 @@ const AutoGenerate = ({ onSubmit }) => {
   const assignInterview = async () => {
     try {
       const assign = await Api.post("/user/assignInterviewers");
-      if (assign.status === 200) console.log(assign);
+      if (assign.status === 200) {
+        console.log(assign);
+        setAlertMsg(assign.data.msg);
+        setList(assign.data.list)
+        setAlert(true);
+      }
+      else{
+        setAlertMsg(assign.data.msg);
+        setAlert(true);
+      }
+      
     } catch (error) {
       console.log(error);
+      setAlertMsg("Failed to schedule interviews");
+      setAlert(true);
     }
   };
 
@@ -123,7 +136,7 @@ const AutoGenerate = ({ onSubmit }) => {
           <Container maxWidth="sm">
             <Header
               title="AUTO ASSIGN INTERVIEWS"
-              subtitle="Automatatically assign interviewers to candidates"
+              // subtitle="Automatatically assign interviewers to candidates"
             />
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={2}>
@@ -139,12 +152,12 @@ const AutoGenerate = ({ onSubmit }) => {
           </Grid> */}
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <InputLabel>Interview Track</InputLabel>
+                    <InputLabel>College</InputLabel>
                     <Select
                       fullWidth
                       value={selectedInterviewTrack}
                       onChange={handleInterviewTrackChange}
-                      label="INTERVIEW TRACK"
+                      label="College"
                     >
                       {interviewTracks.map((track) => (
                         <MenuItem key={track} value={track}>
@@ -154,7 +167,7 @@ const AutoGenerate = ({ onSubmit }) => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                   <FormControl fullWidth>
                     <InputLabel>Specialization</InputLabel>
                     <Select
@@ -173,7 +186,7 @@ const AutoGenerate = ({ onSubmit }) => {
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} style={{ textAlign: "center" }}>
                   <Button
                     type="submit"
@@ -213,7 +226,7 @@ const AutoGenerate = ({ onSubmit }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{ backgroundColor: "#141b2d" }}>
-                  {mockAssigned.map((row, column) => (
+                  {list.map((row, column) => (
                     <TableRow
                       key={row}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -239,10 +252,10 @@ const AutoGenerate = ({ onSubmit }) => {
       <Snackbar open={alert} autoHideDuration={6000} onClose={handleAlertClose}>
         <Alert
           onClose={handleAlertClose}
-          severity="success"
+          severity={alertMsg==="Failed to schedule interviews"?"error":"success"}
           sx={{ width: "100%" }}
         >
-          Interviews have been assigned!
+        {alertMsg}
         </Alert>
       </Snackbar>
     </>
