@@ -14,17 +14,23 @@ export function AppProvider({ children}){
     try {
       const id = localStorage.getItem("users");
       const type = localStorage.getItem("userType");
-      const res = await Api.get(`/user/${type}/${id}`);
-      if(res.status === 200){
-        console.log(res);
-        console.log(res.data);
-        setUser(res.data.user);
+      if(!id){
+         navigate('/');
       }
       else{
-        localStorage.removeItem("users");
-        localStorage.removeItem("userType");
-        navigate('/Register');
+        const res = await Api.get(`/user/${type}/${id}`);
+        if(res.status === 200){
+          console.log(res);
+          console.log(res.data);
+          setUser(res.data.user);
+        }
+        else{
+          localStorage.removeItem("users");
+          localStorage.removeItem("userType");
+          navigate('/');
+        }
       }
+     
     } catch (error) {
       console.log(error)
     }
