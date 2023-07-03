@@ -32,7 +32,6 @@ import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import Api from "../../api";
 import { mockAssigned } from "../../data/mockData";
-
 const AlertFunc = React.forwardRef(function AlertFunc(props, ref) {
   return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
 });

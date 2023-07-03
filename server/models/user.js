@@ -45,7 +45,11 @@ const userSchema = new Schema({
     candidateList:[{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Candidate'
-    }]
+    }],
+    interviewTaken:{
+        type:Number,
+        default:0
+    }
 })
 
 

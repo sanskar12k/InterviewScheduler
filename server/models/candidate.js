@@ -28,7 +28,7 @@ const candSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     }],
-    GoNgo:{
+    GoNgo:{ //Assigned by admin
         type:Number,
         default:-1
     },
