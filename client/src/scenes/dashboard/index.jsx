@@ -40,6 +40,28 @@ const Dashboard = () => {
   const userType = localStorage.getItem('userType');
   const [interviewTaken, setInterviewTaken] = useState(0);
   const [interviewsLeft, setInterviewsLeft] = useState(0);
+  const [totalSelected, setTotalSelected] = useState(0);
+
+  const fetchTotalSelected = async ()=>{
+    console.log('hello')
+    try {
+      const cands = await Api.get(
+        "/cand/allcandidate",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      )
+      const cand = cands.data.candidates;
+      const selectedCand = cand.filter((e)=> e.status[2] === 10);
+      setTotalSelected(selectedCand.length)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const fetchInterviewers = async ()=>{
     try {
@@ -63,11 +85,11 @@ const Dashboard = () => {
       for(let i=0; i<interviewers.length; i++)
       {
         newData = newData + interviewers[i].interviewTaken;
-        newDataLeft = interviewers[i].candidateList.length - interviewers[i].interviewTaken;
+        newDataLeft = newDataLeft + interviewers[i].candidateList.length;
       }
       setInterviewTaken(newData);
       setInterviewsLeft(newDataLeft);
-      console.log(interviewTaken);
+      // console.log(interviewTaken);
     } catch (err) {
       console.log(err);
     }
@@ -100,6 +122,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchNotifs();
     fetchInterviewers();
+    fetchTotalSelected();
     console.log('user:');
     console.log(user);
     // eslint-disable-next-line
@@ -235,21 +258,6 @@ const Dashboard = () => {
           <Box display="flex" justifyContent="center" alignItems="center">
             <Header title="DASHBOARD"/>
           </Box>
-          <Box m="10px" >
-            <Typography display="flex"  justifyContent="center" alignItems="center" >
-              <Link
-                style={{textDecoration:'none'}}
-                component="button"
-                variant="body2"
-                onClick={() => {
-                  window.open("https://meet.google.com/cio-xsdc-xxn", "_blank");
-                }}
-                sx={{ color: "#1F2A40",fontSize:"20px",fontWeight:"bold",backgroundColor:"#005ab3",height:"40px",width:"200px",borderRadius:"10px" }}
-              >
-                Meeting Link
-              </Link>
-            </Typography>
-          </Box>
 
           {/* GRID & CHARTS */}
           <Box
@@ -260,7 +268,7 @@ const Dashboard = () => {
           >
             {/* ROW 1 */}
             <Box
-              gridColumn="span 4"
+              gridColumn="span 5"
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -293,7 +301,7 @@ const Dashboard = () => {
               </Box>
             </Box>
             <Box
-              gridColumn="span 4"
+              gridColumn="span 5"
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -316,7 +324,7 @@ const Dashboard = () => {
                   sx={{ fontSize: "2rem", fontWeight: "bold" }}
                 >
                   {/* {userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)} */}
-                  {user?(userType==='Admin'?interviewsLeft:(user.candidateList.length - user.interviewTaken)):0}
+                  {user?(userType==='Admin'?interviewsLeft:(user.candidateList.length)):0}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -327,7 +335,7 @@ const Dashboard = () => {
               </Box>
             </Box>
             <Box
-              gridColumn="span 4"
+              gridColumn="span 8"
               backgroundColor={colors.primary[400]}
               display="flex"
               alignItems="center"
@@ -348,17 +356,50 @@ const Dashboard = () => {
                 <Typography
                   variant="h4"
                   sx={{ fontSize: "2rem", fontWeight: "bold" }}
-                >
-                  12,361
+                  >
+                  {totalSelected}
                 </Typography>
                 <Typography
                   variant="subtitle2"
                   sx={{ fontSize: "0.8rem", textTransform: "uppercase" }}
                 >
-                  Selected by you
+                  Total Selected
                 </Typography>
               </Box>
             </Box>
+                  <Box
+                    gridColumn="span 1"
+                    // backgroundColor={colors.primary[400]}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    borderRadius="10px"
+                  >
+                    <Box
+                      sx={{
+                        // backgroundColor: colors.primary[400],
+                        color: colors.grey[100],
+                        padding: "20px",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <Box m="10px" >
+                        <Typography display="flex"  justifyContent="center" alignItems="center" >
+                          <Link
+                            style={{textDecoration:'none'}}
+                            component="button"
+                            variant="body2"
+                            onClick={() => {
+                              window.open("https://meet.google.com/cio-xsdc-xxn", "_blank");
+                            }}
+                            sx={{ color: "#1F2A40",fontSize:"20px",fontWeight:"bold",backgroundColor:"#005ab3",height:"40px",width:"200px",borderRadius:"10px" }}
+                          >
+                            Meeting Link
+                          </Link>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
             {userType === "Interviewer" ? (
               <>
               <Box

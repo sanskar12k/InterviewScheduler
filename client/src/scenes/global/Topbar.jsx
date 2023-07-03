@@ -133,9 +133,6 @@ const Topbar = () => {
             </MenuItem>
           ))}
         </Menu>
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
         <IconButton onClick={handleMenuClick} id="person-menu">
           <PersonOutlinedIcon />
         </IconButton>
