@@ -170,7 +170,9 @@ const Registration = () => {
       // toast.warn(error.response.data.error, {
       //   position: "top-center",
       // });
-      alert("Your Credentials are incorrect. Try to login with correct credentials");
+      alert(
+        "Your Credentials are incorrect. Try to login with correct credentials"
+      );
     }
     // setBLoading(false);
   };
@@ -259,33 +261,36 @@ const Registration = () => {
                   ))}
                 </Select>
               </FormControl>
-
-              <FormControl
-                fullWidth
-                className="white-background"
-                required="true"
-                sx={{
-                  marginTop: theme.spacing(1),
-                  marginBottom: theme.spacing(1),
-                }}
-              >
-                <InputLabel style={{ color: "grey" }}>
-                  SPECIALISATION
-                </InputLabel>
-                <Select
-                  multiple
-                  value={selectedSpecialisations}
-                  onChange={handleSpecialisationsChange}
-                  label="SPECIALISATION"
-                  className="white-text"
-                >
-                  {specialisations.map((specialisation) => (
-                    <MenuItem key={specialisation} value={specialisation}>
-                      {specialisation}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              {selectedInterviewTrack === "Technical" && (
+                <>
+                  <FormControl
+                    fullWidth
+                    className="white-background"
+                    required="true"
+                    sx={{
+                      marginTop: theme.spacing(1),
+                      marginBottom: theme.spacing(1),
+                    }}
+                  >
+                    <InputLabel style={{ color: "grey" }}>
+                      SPECIALISATION
+                    </InputLabel>
+                    <Select
+                      multiple
+                      value={selectedSpecialisations}
+                      onChange={handleSpecialisationsChange}
+                      label="SPECIALISATION"
+                      className="white-text"
+                    >
+                      {specialisations.map((specialisation) => (
+                        <MenuItem key={specialisation} value={specialisation}>
+                          {specialisation}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </>
+              )}
             </>
           )}
           <button onClick={handleSubmit}>REGISTER</button>

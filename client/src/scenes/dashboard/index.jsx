@@ -1,17 +1,24 @@
-import { Box, Button, IconButton, Typography, useTheme,
+import {
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  useTheme,
   TableCell,
   TableHead,
   Table,
   Paper,
   TableRow,
   TableContainer,
-  TableBody } from "@mui/material";
+  TableBody,
+} from "@mui/material";
 import { tokens } from "../../theme";
 import { mockNotification, mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import PeopleTwoToneIcon from "@mui/icons-material/PeopleTwoTone";
 import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
+import Link from "@mui/material/Link";
 import LineChart from "../../components/LineChart";
 import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
@@ -24,82 +31,79 @@ import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
 import { useState } from "react";
 import Api from "../../api";
+import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar } = useAuth();
   const [actionData, setActionData] = useState(mockTransactions);
-  const userType = localStorage.getItem('userType');
+  const userType = localStorage.getItem("userType");
 
-  const handleGoOnclick = async (row, column)=>{
+  const handleGoOnclick = async (row, column) => {
     console.log(row);
     console.log(column);
-    setActionData(actionData.filter((e)=>{
-      return e !== row;
-    }))
+    setActionData(
+      actionData.filter((e) => {
+        return e !== row;
+      })
+    );
 
     const data = {
       name: row.user,
       iTrack: row.round,
       specialisation: row.specialisation,
-      status: `Accepted for ${row.round}`
-    }
+      status: `Accepted for ${row.round}`,
+    };
 
     console.log(data);
 
     try {
       console.log("start");
-      const user = await Api.post(
-        "/notif/addNotif",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Accept: "application/json",
-          },
-        }
-      );
+      const user = await Api.post("/notif/addNotif", data, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Accept: "application/json",
+        },
+      });
       console.log("Ernd");
     } catch (err) {
       console.log(err);
     }
-  }
-  const handleNoGoOnclick = async (row, column)=>{
+  };
+  const handleNoGoOnclick = async (row, column) => {
     console.log(row);
     console.log(column);
-    setActionData(actionData.filter((e)=>{
-      return e !== row;
-    }))
+    setActionData(
+      actionData.filter((e) => {
+        return e !== row;
+      })
+    );
 
     const data = {
       name: row.user,
       iTrack: row.round,
       specialisation: row.specialisation,
-      status: `Rejected at ${row.round}`
-    }
+      status: `Rejected at ${row.round}`,
+    };
 
     console.log(data);
 
     try {
       console.log("start");
-      const user = await Api.post(
-        "/notif/addNotif",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Accept: "application/json",
-          },
-        }
-      );
+      const user = await Api.post("/notif/addNotif", data, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Accept: "application/json",
+        },
+      });
       console.log("Ernd");
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
     <>
@@ -107,12 +111,23 @@ const Dashboard = () => {
       <div className="content">
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Header title="DASHBOARD" />
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Header title="DASHBOARD"/>
+          </Box>
+          <Box m="10px" >
+            <Typography display="flex"  justifyContent="center" alignItems="center" >
+              <Link
+                style={{textDecoration:'none'}}
+                component="button"
+                variant="body2"
+                onClick={() => {
+                  window.open("https://meet.google.com/cio-xsdc-xxn", "_blank");
+                }}
+                sx={{ color: "#1F2A40",fontSize:"20px",fontWeight:"bold",backgroundColor:"#005ab3",height:"40px",width:"200px",borderRadius:"10px" }}
+              >
+                Meeting Link
+              </Link>
+            </Typography>
           </Box>
 
           {/* GRID & CHARTS */}
@@ -198,8 +213,8 @@ const Dashboard = () => {
               borderRadius="10px"
             >
               <DoneAllIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "32px" }}
-                />
+                sx={{ color: colors.greenAccent[600], fontSize: "32px" }}
+              />
               <Box
                 sx={{
                   backgroundColor: colors.primary[400],
@@ -222,112 +237,176 @@ const Dashboard = () => {
                 </Typography>
               </Box>
             </Box>
-            {userType==='Interviewer'?
-            <Box
-              gridColumn="span 20"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              overflow="auto"
-            >
+            {userType === "Interviewer" ? (
               <Box
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                colors={colors.grey[100]}
-                p="15px"
+                gridColumn="span 20"
+                gridRow="span 2"
+                backgroundColor={colors.primary[400]}
+                overflow="auto"
               >
-                <Typography
-                  color={colors.grey[100]}
-                  variant="h5"
-                  fontWeight="600"
+                <Box
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  colors={colors.grey[100]}
+                  p="15px"
                 >
-                  Recent Interviews
-                </Typography>
-              </Box>
-              <TableContainer component={Paper} sx={{marginTop:"10px"}}>
-              <Table sx={{ margin:"auto" }} aria-label="simple table">
-                <TableHead>
-                  <TableRow sx={{backgroundColor:"#3e4396"}}>
-                    <TableCell sx={{textAlign:"center"}}>Name</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Comments</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody sx={{backgroundColor:"#141b2d"}}>
-                  {mockNotification.map((row, column) => (
-                    <TableRow
-                      key={row}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      {Object.values(row).map((value, column) => (
-                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-                </Table>
-                </TableContainer>
-            </Box>:<></>
-            } 
-            {
-            userType==='Admin'?
-            <Box
-              gridColumn="span 20"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              overflow="auto"
-            >
-              <Box
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                colors={colors.grey[100]}
-                p="15px"
-              >
-                <Typography
-                  color={colors.grey[100]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  Action Required
-                </Typography>
-              </Box>
-              
-                <TableContainer component={Paper} sx={{marginTop:"10px"}}>
-                <Table sx={{ minWidth: 650,margin:"auto" }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow sx={{backgroundColor:"#3e4396"}}>
-                      <TableCell sx={{textAlign:"center"}}>Name</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
-                      <TableCell align="right" sx={{textAlign:"center"}}>Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody sx={{backgroundColor:"#141b2d"}}>
-                    {actionData.map((row, column) => (
-                      <TableRow
-                        key={row}
-                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                      >
-                        {Object.values(row).map((value, column) => (
-                          <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
-                        ))}
-                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>
-                          <Button variant="contained" color="success" sx={{margin: "2px"}} onClick={()=>{handleGoOnclick(row, column)}}>GO</Button>
-                          <Button variant="contained" color="error" sx={{margin: "2px"}} onClick={()=>{handleNoGoOnclick(row, column)}}>NO-GO</Button>
+                  <Typography
+                    color={colors.grey[100]}
+                    variant="h5"
+                    fontWeight="600"
+                  >
+                    Recent Interviews
+                  </Typography>
+                </Box>
+                <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
+                  <Table sx={{ margin: "auto" }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: "#3e4396" }}>
+                        <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Round
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Specialisation
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Comments
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Status
                         </TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
+                    </TableHead>
+                    <TableBody sx={{ backgroundColor: "#141b2d" }}>
+                      {mockNotification.map((row, column) => (
+                        <TableRow
+                          key={row}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          {Object.values(row).map((value, column) => (
+                            <TableCell
+                              align="right"
+                              key={column}
+                              sx={{ textAlign: "center" }}
+                            >
+                              {value}{" "}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
                   </Table>
-                  </TableContainer>
-                </Box>:<></>
-              }
+                </TableContainer>
+              </Box>
+            ) : (
+              <></>
+            )}
+            {userType === "Admin" ? (
+              <Box
+                gridColumn="span 20"
+                gridRow="span 2"
+                backgroundColor={colors.primary[400]}
+                overflow="auto"
+              >
+                <Box
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  colors={colors.grey[100]}
+                  p="15px"
+                >
+                  <Typography
+                    color={colors.grey[100]}
+                    variant="h5"
+                    fontWeight="600"
+                  >
+                    Action Required
+                  </Typography>
+                </Box>
+
+                <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
+                  <Table
+                    sx={{ minWidth: 650, margin: "auto" }}
+                    aria-label="simple table"
+                  >
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: "#3e4396" }}>
+                        <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Round
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Specialisation
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Round 1
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Round 2
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Round 3
+                        </TableCell>
+                        <TableCell align="right" sx={{ textAlign: "center" }}>
+                          Action
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody sx={{ backgroundColor: "#141b2d" }}>
+                      {actionData.map((row, column) => (
+                        <TableRow
+                          key={row}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          {Object.values(row).map((value, column) => (
+                            <TableCell
+                              align="right"
+                              key={column}
+                              sx={{ textAlign: "center" }}
+                            >
+                              {value}{" "}
+                            </TableCell>
+                          ))}
+                          <TableCell
+                            align="right"
+                            key={column}
+                            sx={{ textAlign: "center" }}
+                          >
+                            <Button
+                              variant="contained"
+                              color="success"
+                              sx={{ margin: "2px" }}
+                              onClick={() => {
+                                handleGoOnclick(row, column);
+                              }}
+                            >
+                              GO
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              sx={{ margin: "2px" }}
+                              onClick={() => {
+                                handleNoGoOnclick(row, column);
+                              }}
+                            >
+                              NO-GO
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            ) : (
+              <></>
+            )}
           </Box>
         </Box>
       </div>
