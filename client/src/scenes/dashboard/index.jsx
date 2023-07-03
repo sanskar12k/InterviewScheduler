@@ -22,7 +22,7 @@ import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Api from "../../api";
 
 const Dashboard = () => {
@@ -31,7 +31,7 @@ const Dashboard = () => {
   const { isSidebar, setIsSidebar } = useAuth();
   const [actionData, setActionData] = useState(mockTransactions);
   const userType = localStorage.getItem('userType');
-
+  const [candList, setCand] = useState();
   const handleGoOnclick = async (row, column)=>{
     console.log(row);
     console.log(column);
@@ -49,6 +49,14 @@ const Dashboard = () => {
     console.log(data);
 
     try {
+      const cid = candList[column]._id;
+      const res = await Api.patch(`/cand/${cid}/goStatus`,{
+        goStatus:1
+      })
+      if(res.status === 200){
+        console.log(res)
+      }
+      
       console.log("start");
       const user = await Api.post(
         "/notif/addNotif",
@@ -100,6 +108,24 @@ const Dashboard = () => {
       console.log(err);
     }
   }
+
+  const listOfCandidates = async()=>{
+    try {
+      const res = await Api.get('/user/adminDashboard');
+      console.log(res);
+      if(res.status === 200){
+        console.log(res.data.cand);
+        setActionData(res.data.cand);
+        setCand(res.data.candidate);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  useEffect(()=>{
+    listOfCandidates();
+  },[])
 
   return (
     <>
@@ -302,8 +328,11 @@ const Dashboard = () => {
                       <TableCell sx={{textAlign:"center"}}>Name</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 1</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 2</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 3</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
                       <TableCell align="right" sx={{textAlign:"center"}}>Action</TableCell>
                     </TableRow>
@@ -316,7 +345,7 @@ const Dashboard = () => {
                       >
                         {Object.values(row).map((value, column) => (
                           <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
-                        ))}
+                    ))}
                         <TableCell align="right" key={column} sx={{textAlign:"center"}}>
                           <Button variant="contained" color="success" sx={{margin: "2px"}} onClick={()=>{handleGoOnclick(row, column)}}>GO</Button>
                           <Button variant="contained" color="error" sx={{margin: "2px"}} onClick={()=>{handleNoGoOnclick(row, column)}}>NO-GO</Button>

@@ -37,7 +37,10 @@ const Contacts = () => {
               }
              }
              if(e.status[2] === 1){
-              e.remark = "Cleared"
+              e.remark = "Waiting for final result";
+             }
+             if(e.status[2] === 10){
+              e.remark = "Selected"
              }
             return { ...e }
           })

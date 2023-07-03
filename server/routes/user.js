@@ -170,6 +170,7 @@ router.patch('/:user_id/cand/:cand_id/updateStatus', async (req, res) => {
         const c_id = new mongoose.Types.ObjectId(cand_id);
         const user = await User.findById(u_id);
         const cand = await Candidate.findById(c_id);
+        cand.interViewer = 0;
         if (user.iTrack === 'Technical') {
             cand.status[0] = status;
         }
@@ -398,18 +399,22 @@ router.patch("/:user_id/taken/:cand_id", async (req, res) => {
         const uid = new mongoose.Types.ObjectId(req.params.user_id);
         const cid = new mongoose.Types.ObjectId(req.params.cand_id);
         const track = await User.findById(uid).select("iTrack");
+        console.log(track)
         const updateUser = await User.findByIdAndUpdate(uid, { $pull: { candidateList: cid } })
         let cand = await Candidate.findById(cid);
-        if (track === 'Technical') {
+        cand.interViewer = 0;
+        if (track.iTrack === 'Technical') {
             if (cand.status[0] === -1) cand.status[0] = 0;
         }
-        else if (track === 'Managerial') {
+        else if (track.iTrack === 'Managerial') {
             if (cand.status[1] === -1) cand.status[1] = 0;
         }
         else {
             if (cand.status[2] === -1) cand.status[2] = 0;
         }
         await cand.save();
+        console.log(cand);
+        console.log(updateUser)
         res.status(200).json({
             cand,
             "msg": "Interview taken"
@@ -489,7 +494,8 @@ router.post("/assignInterviewers", async (req, res) => {
             {
                 $sort: {
                     numTags: 1,
-                    dateLen: 1
+                    interviewTaken: 1,
+                    dateLen: 1,
                 }
             }
         ])
@@ -531,6 +537,54 @@ router.post("/assignInterviewers", async (req, res) => {
     }
 })
 
+router.get("/adminDashboard", async(req, res)=>{
+    try {
+        // Candidates whose interviewer has not been assigned and first round has been done  and has not been selected yet
+         const candidate = await Candidate.find({interViewer:0, 'status.0':{$ne:-1}}).sort({"dateNdTime.time":1});
+         let cand = [];
+         for(let i= 0;i<candidate.length;i++){
+            let status1 = "Not Taken", status2 = "Not Taken", status3 = "Not Taken";
+            let round1 = candidate[i].comment[0], round2 = "", round3 = "";
+            let round = "Technical";
+            if(candidate[i].comment.length === 2)round= "Managerial";
+            if(candidate[i].comment.length === 3)round= "HR";
+            if(candidate[i].status[0] === 0)status1 = "Rejected";
+            if(candidate[i].status[0] === 1)status1 = "Accepted";
+            if(candidate[i].status[1] === 0)status2 = "Rejected";
+            if(candidate[i].status[1] === 1)status2 = "Accepted";
+            if(candidate[i].status[2] === 0)status3 = "Rejected";
+            if(candidate[i].status[2] === 1)status3 = "Accepted";
+            if(candidate[i].comment.length > 1){
+                round2 = candidate[i].comment[1];
+            }
+            if(candidate[i].comment.length > 2){
+                round3 = candidate[i].comment[2];
+            }
+            const user = {
+                user: candidate[i].fname +" "+ candidate[i].lname,
+                round:round,
+                specialisation: candidate[i].specialisation,
+                status1: status1,
+                round1: round1,
+                status2: status2,
+                round2: round2,
+                status3: status3,
+                round3: round3
+            }
+            cand.push(user);
+         }
+          res.status(200).json({
+            cand,
+            candidate,
+            "msg":"Got List"
+          })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            error
+        })
+    }
+})
 
 module.exports = router;
 
