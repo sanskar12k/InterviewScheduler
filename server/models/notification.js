@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const notifSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   iTrack: {
     type: String,

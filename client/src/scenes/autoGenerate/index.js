@@ -1,11 +1,20 @@
 import React from 'react';
 import { useState } from 'react';
 import { useFormik } from 'formik';
-import { TextField, Button, Grid, Container, MenuItem, List, ListItem, ListItemText, Select, InputLabel, FormControl, Box, Stack, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Grid, Container, MenuItem, List, ListItem, ListItemText, Select, InputLabel, FormControl, Box, Stack, Snackbar, Alert,
+  TableCell,
+  TableHead,
+  Table,
+  Paper,
+  TableRow,
+  TableContainer,
+  TableBody,
+  useTheme } from '@mui/material';
 import Header from "../../components/Header";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import { mockAssigned } from "../../data/mockData";
 
 const AlertFunc = React.forwardRef(function AlertFunc(props, ref) {
     return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -149,8 +158,36 @@ const AutoGenerate = ({ onSubmit }) => {
               Assign
             </Button>
           </Grid>
+
         </Grid>
       </form>
+    </Container>
+    <Container>
+      <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+        <Table sx={{ minWidth: 650,margin:"auto" }} aria-label="simple table">
+          <TableHead>
+            <TableRow sx={{backgroundColor:"#3e4396"}}>
+              <TableCell align="right" sx={{textAlign:"center"}}>Date</TableCell>
+              <TableCell align="right" sx={{textAlign:"center"}}>Time</TableCell>
+              <TableCell align="right" sx={{textAlign:"center"}}>Interviewer</TableCell>
+              <TableCell align="right" sx={{textAlign:"center"}}>Candidate</TableCell>
+              <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{backgroundColor:"#141b2d"}}>
+            {mockAssigned.map((row, column) => (
+              <TableRow
+                key={row}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                {Object.values(row).map((value, column) => (
+                  <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
     </Box>
     </div>

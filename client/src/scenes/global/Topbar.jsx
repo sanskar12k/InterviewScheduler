@@ -8,7 +8,7 @@ import {
   MenuItem,
   ClickAwayListener,
 } from "@mui/material";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -18,6 +18,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
+import Api from "../../api";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -25,9 +26,32 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const [anchorEl, setAnchorEl] = useState(null); // Track the anchor element for the menu
   const [anchorElNotif, setAnchorElNotif] = useState(null);
+  const [notifications, setNotifications] = useState([{name: "harsh", iTrack: "Technical", specialisation: "CS", status: "Accepted"},{name: "harsh", iTrack: "Technical", specialisation: "CS", status: "Accepted"}]);
 
-  const handleOpenMenuNotif = (event) => {
+  const handleOpenMenuNotif = async (event) => {
     setAnchorElNotif(event.currentTarget);
+
+    try {
+      console.log("start");
+      const user = await Api.get(
+        "/notif/getNotif",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = user.data.notif;
+      setNotifications(data.reverse().slice(0,4));
+      // console.log(user);
+      // console.log(user.data.notif);
+      // console.log(notifications);
+      console.log("Ernd");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleCloseMenuNotif = () => {
@@ -49,13 +73,6 @@ const Topbar = () => {
     localStorage.removeItem("userType");
     return navigate("/");
   }
-
-  const notifications = [
-    { id: 1, name: "John Doe", status: "Accepted" },
-    { id: 2, name: "Jane Smith", status: "Rejected" },
-    { id: 3, name: "Michael Johnson", status: "Accepted" },
-    { id: 4, name: "Nikhil Singh", status: "Technical Round Cleared" }
-  ];
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
@@ -94,9 +111,9 @@ const Topbar = () => {
           sx={{ borderRadius: "0", margin: "auto" }}
           MenuListProps={{ sx: { py: 0 } }}
         >
-          {notifications.map((notification) => (
+          {notifications.map((notification, idx) => (
             <MenuItem
-              key={notification.id}
+              key={idx}
               sx={{
                 // width:"100%",
                 color: "white",
