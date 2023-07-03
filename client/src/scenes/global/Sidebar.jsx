@@ -17,6 +17,7 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import { useAuth } from "../../Context/AppContext";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -45,8 +46,8 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const {user} = useAuth();
-  const userType = localStorage.getItem('userType');
+  const { user } = useAuth();
+  const userType = localStorage.getItem("userType");
 
   return (
     <Box
@@ -86,7 +87,11 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]} fontWeight={"bold"}>
+                <Typography
+                  variant="h3"
+                  color={colors.grey[100]}
+                  fontWeight={"bold"}
+                >
                   {localStorage.getItem("userType")}
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -116,9 +121,10 @@ const Sidebar = () => {
                 >
                   {user.fname} {user.lname}
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  
-                </Typography>
+                <Typography
+                  variant="h5"
+                  color={colors.greenAccent[500]}
+                ></Typography>
               </Box>
             </Box>
           )}
@@ -139,34 +145,36 @@ const Sidebar = () => {
             >
               Data
             </Typography>
-            {
-              userType==="Interviewer"?
+            {userType === "Interviewer" ? (
               <Item
-              title="Candidates"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              />:<></>
-            }
+                title="Candidates"
+                to="/team"
+                icon={<PeopleOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )}
             <Item
-              title="Contacts Information"
+              title="Candidates Status"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
 
-            {
-              userType==='Admin'?
+            {/* {userType === "Admin" ? (
               <Item
-              title="Invoices Balances"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              />:<></>
-            }
+                title="Invoices Balances"
+                to="/invoices"
+                icon={<ReceiptOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )} */}
 
             <Typography
               variant="h6"
@@ -175,30 +183,55 @@ const Sidebar = () => {
             >
               Pages
             </Typography>
-            {
-              userType==='Admin'?
+            {userType === "Admin" ? (
               <Item
-              title="Candidate Search Form"
-              to="/formAdmin"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              />:<></>
-            }
-            {
-              userType==='Admin'?
+                title="Candidate Search Form"
+                to="/formAdmin"
+                icon={<PersonOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )}
+            {userType === "Admin" ? (
               <Item
-              title="Auto Assign Interviews"
-              to="/autoGenerate"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />:<></>
-            }
+                title="Auto Assign Interviews"
+                to="/autoGenerate"
+                icon={<PersonOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )}
+
+            {userType === "Interviewer" ? (
+              <Item
+                title="Calendar"
+                to="/calendar"
+                icon={<CalendarTodayOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )}
+            {userType === "Admin" ? (
+              <Item
+                title="Database Upload"
+                to="/bar"
+                icon={<BarChartOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            ) : (
+              <></>
+            )}
             <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
+              title="Chat"
+              to="/pie"
+              icon={<ChatIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -210,31 +243,15 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Charts
-            </Typography>
-            {
-              userType==='Admin'?
-              <Item
-              title="Database Upload"
-              to="/bar"
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              />:<></>
-            }
-            <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
+            </Typography> */}
+
+            {/* <Item
               title="Line Chart"
               to="/line"
               icon={<TimelineOutlinedIcon />}
@@ -247,7 +264,7 @@ const Sidebar = () => {
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
           </Box>
         </Menu>
       </ProSidebar>

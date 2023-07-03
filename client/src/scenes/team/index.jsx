@@ -124,7 +124,13 @@ const Team = () => {
       //     });
       //   }, 100);
       console.log(res.data.candidates.candidateList);
-      setData(res.data.candidates.candidateList);
+      // setData(res.data.candidates.candidateList);
+      setData(
+        res.data.candidates.candidateList.map(e => {
+          e.time = `${e.dateNdTime.time} - ${e.dateNdTime.time + 1}` 
+          return { ...e }
+        })
+      )
       }
       else {
       }
@@ -153,7 +159,8 @@ const Team = () => {
  const handleSelectionChange = async(selectionModel) => {
   try {
     const uid = localStorage.getItem("users");
-    const res = await Api.patch(`/user/${uid}/taken/${selectionModel}`);
+    console.log(selectionModel[0])
+    const res = await Api.patch(`/user/${uid}/taken/${selectionModel[0]}`);
     if(res.status === 200){
       console.log(res.data)
       console.log("Interview Taken");
@@ -178,7 +185,7 @@ const Team = () => {
   }
  }
   const columns = [
-    { field: "Time", headerName: "Time" },
+    { field: "time", headerName: "Time" },
     {
       field: "fname",
       headerName: "Name",

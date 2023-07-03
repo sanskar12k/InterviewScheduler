@@ -26,9 +26,9 @@ const userSchema = new Schema({
         enum: ['Technical', 'Managerial', 'HR']
     },
     specialisation:
-    {
-        type: [String]
-    }
+    [{
+        type: String
+    }]
     ,
     password: {
         type: String,
@@ -45,7 +45,11 @@ const userSchema = new Schema({
     candidateList:[{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Candidate'
-    }]
+    }],
+    interviewTaken:{
+        type:Number,
+        default:0
+    }
 })
 
 

@@ -1,7 +1,22 @@
-import React from 'react';
-import { useState } from 'react';
-import { useFormik } from 'formik';
-import { TextField, Button, Grid, Container, MenuItem, List, ListItem, ListItemText, Select, InputLabel, FormControl, Box, Stack, Snackbar, Alert,
+import React from "react";
+import { useState } from "react";
+import { useFormik } from "formik";
+import {
+  TextField,
+  Button,
+  Grid,
+  Container,
+  MenuItem,
+  List,
+  ListItem,
+  ListItemText,
+  Select,
+  InputLabel,
+  FormControl,
+  Box,
+  Stack,
+  Snackbar,
+  Alert,
   TableCell,
   TableHead,
   Table,
@@ -9,22 +24,23 @@ import { TextField, Button, Grid, Container, MenuItem, List, ListItem, ListItemT
   TableRow,
   TableContainer,
   TableBody,
-  useTheme } from '@mui/material';
+  useTheme,
+} from "@mui/material";
 import Header from "../../components/Header";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import Api from "../../api";
 import { mockAssigned } from "../../data/mockData";
-
 const AlertFunc = React.forwardRef(function AlertFunc(props, ref) {
-    return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+  return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const AutoGenerate = ({ onSubmit }) => {
   const initialValues = {
-    name: '',
-    availabilityDate: '',
-    round: ''
+    name: "",
+    availabilityDate: "",
+    round: "",
   };
 
   const [selectedSpecialisations, setSelectedSpecialisations] = useState([]);
@@ -44,9 +60,9 @@ const AutoGenerate = ({ onSubmit }) => {
     // Add more specialisations as needed
   ];
   const interviewTracks = [
-    "Technical Round",
-    "Managerial Round",
-    "HR Round",
+    "Technical",
+    "Managerial",
+    "HR",
     // Add more interview tracks as needed
   ];
 
@@ -64,7 +80,6 @@ const AutoGenerate = ({ onSubmit }) => {
     setSelectedInterviewTrack(event.target.value);
   };
 
-
   const formik = useFormik({
     initialValues,
     onSubmit: async (values) => {
@@ -73,7 +88,7 @@ const AutoGenerate = ({ onSubmit }) => {
       // setFilteredCandidates(filteredResults);
 
       onSubmit(values);
-    }
+    },
   });
 
   const [alert, setAlert] = React.useState(false);
@@ -83,13 +98,21 @@ const AutoGenerate = ({ onSubmit }) => {
   };
 
   const handleAlertClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setAlert(false);
   };
 
+  const assignInterview = async () => {
+    try {
+      const assign = await Api.post("/user/assignInterviewers");
+      if (assign.status === 200) console.log(assign);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -111,89 +134,111 @@ const AutoGenerate = ({ onSubmit }) => {
               onChange={formik.handleChange}
             />
           </Grid> */}
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-            <InputLabel>Interview Track</InputLabel>
-            <Select
-              fullWidth
-              value={selectedInterviewTrack}
-              onChange={handleInterviewTrackChange}
-              label="INTERVIEW TRACK"
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel>Interview Track</InputLabel>
+                    <Select
+                      fullWidth
+                      value={selectedInterviewTrack}
+                      onChange={handleInterviewTrackChange}
+                      label="INTERVIEW TRACK"
+                    >
+                      {interviewTracks.map((track) => (
+                        <MenuItem key={track} value={track}>
+                          {track}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel>Specialization</InputLabel>
+                    <Select
+                      multiple
+                      fullWidth
+                      id="specialization"
+                      name="Specialization"
+                      label="Specialization"
+                      value={selectedSpecialisations}
+                      onChange={handleSpecialisationsChange}
+                    >
+                      {specialisations.map((specialisation) => (
+                        <MenuItem key={specialisation} value={specialisation}>
+                          {specialisation}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} style={{ textAlign: "center" }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    style={{ backgroundColor: "#016064", fontWeight: "bold" }}
+                    onClick={assignInterview}
+                  >
+                    Assign
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Container>
+          <Container>
+            <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
+              <Table
+                sx={{ minWidth: 650, margin: "auto" }}
+                aria-label="simple table"
               >
-              {interviewTracks.map((track) => (
-                <MenuItem key={track} value={track}>
-                  {track}
-                </MenuItem>
-              ))}
-            </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-            <InputLabel>Specialization</InputLabel>
-            <Select
-              multiple
-              fullWidth
-              id="specialization"
-              name="Specialization"
-              label="Specialization"
-              value={selectedSpecialisations}
-              onChange={handleSpecialisationsChange}
-            >
-              {specialisations.map((specialisation) => (
-                  <MenuItem key={specialisation} value={specialisation}>
-                    {specialisation}
-                  </MenuItem>
-                ))}
-            </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} style={{textAlign:"center"}}>
-            <Button 
-            type="submit" 
-            variant="contained" 
-            style={{backgroundColor:"#016064",fontWeight:"bold"}}
-            onClick={handleAlertOpen}
-            >
-              Assign
-            </Button>
-          </Grid>
-
-        </Grid>
-      </form>
-    </Container>
-    <Container>
-      <TableContainer component={Paper} sx={{marginTop:"10px"}}>
-        <Table sx={{ minWidth: 650,margin:"auto" }} aria-label="simple table">
-          <TableHead>
-            <TableRow sx={{backgroundColor:"#3e4396"}}>
-              <TableCell align="right" sx={{textAlign:"center"}}>Date</TableCell>
-              <TableCell align="right" sx={{textAlign:"center"}}>Time</TableCell>
-              <TableCell align="right" sx={{textAlign:"center"}}>Interviewer</TableCell>
-              <TableCell align="right" sx={{textAlign:"center"}}>Candidate</TableCell>
-              <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{backgroundColor:"#141b2d"}}>
-            {mockAssigned.map((row, column) => (
-              <TableRow
-                key={row}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                {Object.values(row).map((value, column) => (
-                  <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
-    </Box>
-    </div>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#3e4396" }}>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      Date
+                    </TableCell>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      Time
+                    </TableCell>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      Interviewer
+                    </TableCell>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      Candidate
+                    </TableCell>
+                    <TableCell align="right" sx={{ textAlign: "center" }}>
+                      Specialisation
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{ backgroundColor: "#141b2d" }}>
+                  {mockAssigned.map((row, column) => (
+                    <TableRow
+                      key={row}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      {Object.values(row).map((value, column) => (
+                        <TableCell
+                          align="right"
+                          key={column}
+                          sx={{ textAlign: "center" }}
+                        >
+                          {value}{" "}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Container>
+        </Box>
+      </div>
 
       <Snackbar open={alert} autoHideDuration={6000} onClose={handleAlertClose}>
-        <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleAlertClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           Interviews have been assigned!
         </Alert>
       </Snackbar>

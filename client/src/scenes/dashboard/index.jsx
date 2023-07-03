@@ -29,7 +29,7 @@ import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Api from "../../api";
 import { Navigate } from "react-router-dom";
 
@@ -38,9 +38,9 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar } = useAuth();
   const [actionData, setActionData] = useState(mockTransactions);
-  const userType = localStorage.getItem("userType");
-
-  const handleGoOnclick = async (row, column) => {
+  const userType = localStorage.getItem('userType');
+  const [candList, setCand] = useState();
+  const handleGoOnclick = async (row, column)=>{
     console.log(row);
     console.log(column);
     setActionData(
@@ -59,6 +59,14 @@ const Dashboard = () => {
     console.log(data);
 
     try {
+      const cid = candList[column]._id;
+      const res = await Api.patch(`/cand/${cid}/goStatus`,{
+        goStatus:1
+      })
+      if(res.status === 200){
+        console.log(res)
+      }
+      
       console.log("start");
       const user = await Api.post("/notif/addNotif", data, {
         headers: {
@@ -104,6 +112,24 @@ const Dashboard = () => {
       console.log(err);
     }
   };
+
+  const listOfCandidates = async()=>{
+    try {
+      const res = await Api.get('/user/adminDashboard');
+      console.log(res);
+      if(res.status === 200){
+        console.log(res.data.cand);
+        setActionData(res.data.cand);
+        setCand(res.data.candidate);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
+  useEffect(()=>{
+    listOfCandidates();
+  },[])
 
   return (
     <>
@@ -238,46 +264,107 @@ const Dashboard = () => {
               </Box>
             </Box>
             {userType === "Interviewer" ? (
+              <>
               <Box
                 gridColumn="span 20"
                 gridRow="span 2"
                 backgroundColor={colors.primary[400]}
                 overflow="auto"
               >
-                <Box
+                <Typography
                   justifyContent="space-between"
                   alignItems="center"
                   borderBottom={`4px solid ${colors.primary[500]}`}
                   colors={colors.grey[100]}
                   p="15px"
                 >
-                  <Typography
-                    color={colors.grey[100]}
-                    variant="h5"
-                    fontWeight="600"
-                  >
-                    Recent Interviews
-                  </Typography>
+                  Recent Interviews
+                </Typography>
+              
+              <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+              <Table sx={{ margin:"auto" }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{backgroundColor:"#3e4396"}}>
+                    <TableCell sx={{textAlign:"center"}}>Name</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Comments</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{backgroundColor:"#141b2d"}}>
+                  {mockNotification.map((row, column) => (
+                    <TableRow
+                      key={row}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      {Object.values(row).map((value, column) => (
+                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+                </Table>
+                </TableContainer>
                 </Box>
-                <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
-                  <Table sx={{ margin: "auto" }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow sx={{ backgroundColor: "#3e4396" }}>
-                        <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Round
+                </>
+            ):<></>
+            } 
+            {
+            userType==='Admin'?
+            <Box
+              gridColumn="span 20"
+              gridRow="span 2"
+              backgroundColor={colors.primary[400]}
+              overflow="auto"
+            >
+              <Box
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                colors={colors.grey[100]}
+                p="15px"
+              >
+                <Typography
+                  color={colors.grey[100]}
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  Action Required
+                </Typography>
+              </Box>
+              
+                <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+                <Table sx={{ minWidth: 650,margin:"auto" }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow sx={{backgroundColor:"#3e4396"}}>
+                      <TableCell sx={{textAlign:"center"}}>Name</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Status 3</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{backgroundColor:"#141b2d"}}>
+                    {actionData.map((row, column) => (
+                      <TableRow
+                        key={row}
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      >
+                        {Object.values(row).map((value, column) => (
+                          <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
+                        ))}
+                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>
+                          <Button variant="contained" color="success" sx={{margin: "2px"}} onClick={()=>{handleGoOnclick(row, column)}}>GO</Button>
+                          <Button variant="contained" color="error" sx={{margin: "2px"}} onClick={()=>{handleNoGoOnclick(row, column)}}>NO-GO</Button>
                         </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Specialisation
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Comments
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Status
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
+                      </TableRow>))}
+                    </TableBody>
                     <TableBody sx={{ backgroundColor: "#141b2d" }}>
                       {mockNotification.map((row, column) => (
                         <TableRow
@@ -301,112 +388,10 @@ const Dashboard = () => {
                   </Table>
                 </TableContainer>
               </Box>
-            ) : (
+             : (
               <></>
             )}
-            {userType === "Admin" ? (
-              <Box
-                gridColumn="span 20"
-                gridRow="span 2"
-                backgroundColor={colors.primary[400]}
-                overflow="auto"
-              >
-                <Box
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderBottom={`4px solid ${colors.primary[500]}`}
-                  colors={colors.grey[100]}
-                  p="15px"
-                >
-                  <Typography
-                    color={colors.grey[100]}
-                    variant="h5"
-                    fontWeight="600"
-                  >
-                    Action Required
-                  </Typography>
-                </Box>
-
-                <TableContainer component={Paper} sx={{ marginTop: "10px" }}>
-                  <Table
-                    sx={{ minWidth: 650, margin: "auto" }}
-                    aria-label="simple table"
-                  >
-                    <TableHead>
-                      <TableRow sx={{ backgroundColor: "#3e4396" }}>
-                        <TableCell sx={{ textAlign: "center" }}>Name</TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Round
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Specialisation
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Round 1
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Round 2
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Round 3
-                        </TableCell>
-                        <TableCell align="right" sx={{ textAlign: "center" }}>
-                          Action
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody sx={{ backgroundColor: "#141b2d" }}>
-                      {actionData.map((row, column) => (
-                        <TableRow
-                          key={row}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          {Object.values(row).map((value, column) => (
-                            <TableCell
-                              align="right"
-                              key={column}
-                              sx={{ textAlign: "center" }}
-                            >
-                              {value}{" "}
-                            </TableCell>
-                          ))}
-                          <TableCell
-                            align="right"
-                            key={column}
-                            sx={{ textAlign: "center" }}
-                          >
-                            <Button
-                              variant="contained"
-                              color="success"
-                              sx={{ margin: "2px" }}
-                              onClick={() => {
-                                handleGoOnclick(row, column);
-                              }}
-                            >
-                              GO
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              sx={{ margin: "2px" }}
-                              onClick={() => {
-                                handleNoGoOnclick(row, column);
-                              }}
-                            >
-                              NO-GO
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            ) : (
-              <></>
-            )}
+            
           </Box>
         </Box>
       </div>
