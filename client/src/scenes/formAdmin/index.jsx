@@ -114,7 +114,7 @@ const FormComponent = ({ onSubmit }) => {
       <Topbar setIsSidebar={setIsSidebar} />
     <Box m="20px">
     <Container maxWidth="sm">
-      <Header title="Filter Candidate" subtitle="Find the candidates"/>
+      <Header title="FILTER CANDIDATE" subtitle="Find the candidates"/>
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={2}>
           {/* <Grid item xs={12}>

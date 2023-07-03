@@ -271,14 +271,92 @@ export const mockTransactions = [
     user: "johndoe",
     round: "Technical",
     specialisation: "CS",
-    status: "Accepted"
+    round1: "Can be selected",
+    round2: "Did pretty good",
+    round3: "Not so sure"
   },
   {
     user: "johndoe",
     round: "Technical",
     specialisation: "CS",
+    round1: "Can be selected",
+    round2: "Did pretty good",
+    round3: "Not so sure"
+  },
+  {
+    user: "johndoe",
+    round: "Technical",
+    specialisation: "CS",
+    round1: "Can be selected",
+    round2: "Did pretty good",
+    round3: "Not so sure"
+  }
+  
+];
+
+export const mockAssigned = [
+  
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+  {
+    date: "20-03-23",
+    time: "8-9",
+    name: "johndoe",
+    candidate: "john cena",
+    specialisation: "CS",
+  },
+];
+
+
+export const mockNotification = [
+  {
+    name: "johndoe",
+    round: "Technical",
+    specialisation: "HR",
+    Comments: "Should go ahead",
     status: "Accepted"
   },
+  {
+    name: "johdoe",
+    round: "Technical",
+    specialisation: "HR",
+    Comments: "Should not go ahead",
+    status: "Rejected"
+  },
+
   
 ];
 

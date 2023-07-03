@@ -6,7 +6,7 @@ import { useTheme } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Api from "../../api";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
   const theme = useTheme();
@@ -69,17 +69,18 @@ const Registration = () => {
     e.preventDefault();
     // setBLoading(true);
     try {
-      console.log("start")
-      const user = await Api.post('/user/createuser',
+      console.log("start");
+      const user = await Api.post(
+        "/user/createuser",
         {
           fname: fname,
           lname: lname,
-          email:email,
+          email: email,
           password: password,
           phNumber: phone,
           iTrack: selectedInterviewTrack,
           specialisation: selectedSpecialisations,
-          user: selectedjoinAs
+          user: selectedjoinAs,
         },
         {
           headers: {
@@ -88,28 +89,27 @@ const Registration = () => {
             Accept: "application/json",
           },
         }
-      )
-      console.log("Ernd")
+      );
+      console.log("Ernd");
       console.log(user.data.user);
       if (user.status === 200) {
-      //   setTimeout(() => {
-      //     toast.success(user.data.message, {
-      //       position: "top-center",
-      //     });
-      //   }, 100);
-      console.log(user.status);
-      localStorage.setItem("userType", selectedjoinAs)
-      localStorage.setItem("users", user.data.user._id)
-        setFname('');
-        setLname('');
-        setPhone('');
-        setPassword('');
-        setEmail('');
-        setSelectedInterviewTrack('');
+        //   setTimeout(() => {
+        //     toast.success(user.data.message, {
+        //       position: "top-center",
+        //     });
+        //   }, 100);
+        console.log(user.status);
+        localStorage.setItem("userType", selectedjoinAs);
+        localStorage.setItem("users", user.data.user._id);
+        setFname("");
+        setLname("");
+        setPhone("");
+        setPassword("");
+        setEmail("");
+        setSelectedInterviewTrack("");
         setSelectedSpecialisations([]);
-        navigate('/Dashboard')
-      }
-      else {
+        navigate("/Dashboard");
+      } else {
         // // console.log(user)
         // toast.warn(user, {
         //   position: "top-center",
@@ -123,16 +123,17 @@ const Registration = () => {
       // });
     }
     // setBLoading(false);
-  }
+  };
   const login = async (e) => {
     e.preventDefault();
     // setBLoading(true);
     try {
-      console.log("login")
-      const user = await Api.post('/user/login',
+      console.log("login");
+      const user = await Api.post(
+        "/user/login",
         {
           email: emailLog,
-          password: passwordLog
+          password: passwordLog,
         },
         {
           headers: {
@@ -141,48 +142,75 @@ const Registration = () => {
             Accept: "application/json",
           },
         }
-      )
-      console.log("Ernd")
+      );
+      console.log("Ernd");
       console.log(user.data.userExist);
       if (user.status === 200) {
-      //   setTimeout(() => {
-      //     toast.success(user.data.message, {
-      //       position: "top-center",
-      //     });
-      //   }, 100);
-      console.log(user.status);
-      localStorage.setItem("userType", user.data.userType);
-      localStorage.setItem("users", user.data.userExist._id);
-        setPasswordLog('');
-        setEmailLog('');
-        navigate('/Dashboard');
-      }
-      else {
+        //   setTimeout(() => {
+        //     toast.success(user.data.message, {
+        //       position: "top-center",
+        //     });
+        //   }, 100);
+        console.log(user.status);
+        localStorage.setItem("userType", user.data.userType);
+        localStorage.setItem("users", user.data.userExist._id);
+        setPasswordLog("");
+        setEmailLog("");
+        navigate("/Dashboard");
+      } else {
         // // console.log(user)
         // toast.warn(user, {
         //   position: "top-center",
         // });
       }
+
       // setBLoading(false);
     } catch (error) {
       console.log(error);
       // toast.warn(error.response.data.error, {
       //   position: "top-center",
       // });
+      alert("Your Credentials are incorrect. Try to login with correct credentials");
     }
     // setBLoading(false);
-  }
-  
+  };
+
   return (
     <div className={`container ${addclass}`} id="container">
       <div className="form-container  sign-up-container">
         <form className="registration-form">
           <h1>Create Account</h1>
-          <input type="text" placeholder="FIRST NAME" onChange={e => setFname(e.target.value)} value={fname} required="true" />
-          <input type="text" placeholder="LAST NAME" onChange={e => setLname(e.target.value)} required="true" />
-          <input type="email" placeholder="EMAIL" onChange={e => setEmail(e.target.value)} required="true" />
-          <input type="phone" placeholder="PHONE NUMBER" onChange={e => setPhone(e.target.value)} required="true" />
-          <input type="password" placeholder="PASSWORD" onChange={e => setPassword(e.target.value)} required="true" />
+          <input
+            type="text"
+            placeholder="FIRST NAME"
+            onChange={(e) => setFname(e.target.value)}
+            value={fname}
+            required="true"
+          />
+          <input
+            type="text"
+            placeholder="LAST NAME"
+            onChange={(e) => setLname(e.target.value)}
+            required="true"
+          />
+          <input
+            type="email"
+            placeholder="EMAIL"
+            onChange={(e) => setEmail(e.target.value)}
+            required="true"
+          />
+          <input
+            type="phone"
+            placeholder="PHONE NUMBER"
+            onChange={(e) => setPhone(e.target.value)}
+            required="true"
+          />
+          <input
+            type="password"
+            placeholder="PASSWORD"
+            onChange={(e) => setPassword(e.target.value)}
+            required="true"
+          />
           <FormControl
             fullWidth
             className="white-background"
@@ -204,59 +232,83 @@ const Registration = () => {
             </Select>
           </FormControl>
 
-          {selectedjoinAs === 'Interviewer' && <>
-            <FormControl
-              fullWidth
-              className="white-background"
-              required="true"
-              sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(1) }}
-            >
-              <InputLabel style={{ color: "grey" }}>INTERVIEW TRACK</InputLabel>
-              <Select
-                value={selectedInterviewTrack}
-                onChange={handleInterviewTrackChange}
-                label="INTERVIEW TRACK"
-                className="white-text"
-
+          {selectedjoinAs === "Interviewer" && (
+            <>
+              <FormControl
+                fullWidth
+                className="white-background"
+                required="true"
+                sx={{
+                  marginTop: theme.spacing(1),
+                  marginBottom: theme.spacing(1),
+                }}
               >
-                {interviewTracks.map((track) => (
-                  <MenuItem key={track} value={track}>
-                    {track}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <InputLabel style={{ color: "grey" }}>
+                  INTERVIEW TRACK
+                </InputLabel>
+                <Select
+                  value={selectedInterviewTrack}
+                  onChange={handleInterviewTrackChange}
+                  label="INTERVIEW TRACK"
+                  className="white-text"
+                >
+                  {interviewTracks.map((track) => (
+                    <MenuItem key={track} value={track}>
+                      {track}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-            <FormControl
-              fullWidth
-              className="white-background"
-              required="true"
-              sx={{ marginTop: theme.spacing(1), marginBottom: theme.spacing(1) }}
-            >
-              <InputLabel style={{ color: "grey" }}>SPECIALISATION</InputLabel>
-              <Select
-                multiple
-                value={selectedSpecialisations}
-                onChange={handleSpecialisationsChange}
-                label="SPECIALISATION"
-                className="white-text"
+              <FormControl
+                fullWidth
+                className="white-background"
+                required="true"
+                sx={{
+                  marginTop: theme.spacing(1),
+                  marginBottom: theme.spacing(1),
+                }}
               >
-                {specialisations.map((specialisation) => (
-                  <MenuItem key={specialisation} value={specialisation}>
-                    {specialisation}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </>}
+                <InputLabel style={{ color: "grey" }}>
+                  SPECIALISATION
+                </InputLabel>
+                <Select
+                  multiple
+                  value={selectedSpecialisations}
+                  onChange={handleSpecialisationsChange}
+                  label="SPECIALISATION"
+                  className="white-text"
+                >
+                  {specialisations.map((specialisation) => (
+                    <MenuItem key={specialisation} value={specialisation}>
+                      {specialisation}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </>
+          )}
           <button onClick={handleSubmit}>REGISTER</button>
         </form>
       </div>
       <div className="form-container sign-in-container">
         <form className="registration-form">
           <h1>Login</h1>
-          <input type="email" placeholder="EMAIL" onChange={e => {setEmailLog(e.target.value); console.log(emailLog)}}  required="true" />
-          <input type="password" placeholder="PASSWORD" onChange={e => setPasswordLog(e.target.value)}  required="true" />
+          <input
+            type="email"
+            placeholder="EMAIL"
+            onChange={(e) => {
+              setEmailLog(e.target.value);
+              console.log(emailLog);
+            }}
+            required="true"
+          />
+          <input
+            type="password"
+            placeholder="PASSWORD"
+            onChange={(e) => setPasswordLog(e.target.value)}
+            required="true"
+          />
           <button onClick={login}>LOGIN</button>
         </form>
       </div>

@@ -1,6 +1,13 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button, IconButton, Typography, useTheme,
+  TableCell,
+  TableHead,
+  Table,
+  Paper,
+  TableRow,
+  TableContainer,
+  TableBody } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
+import { mockNotification, mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import PeopleTwoToneIcon from "@mui/icons-material/PeopleTwoTone";
 import TrafficIcon from "@mui/icons-material/Traffic";
@@ -15,39 +22,97 @@ import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import { useState } from "react";
+import Api from "../../api";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar } = useAuth();
+  const [actionData, setActionData] = useState(mockTransactions);
+  const userType = localStorage.getItem('userType');
+
+  const handleGoOnclick = async (row, column)=>{
+    console.log(row);
+    console.log(column);
+    setActionData(actionData.filter((e)=>{
+      return e !== row;
+    }))
+
+    const data = {
+      name: row.user,
+      iTrack: row.round,
+      specialisation: row.specialisation,
+      status: `Accepted for ${row.round}`
+    }
+
+    console.log(data);
+
+    try {
+      console.log("start");
+      const user = await Api.post(
+        "/notif/addNotif",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log("Ernd");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  const handleNoGoOnclick = async (row, column)=>{
+    console.log(row);
+    console.log(column);
+    setActionData(actionData.filter((e)=>{
+      return e !== row;
+    }))
+
+    const data = {
+      name: row.user,
+      iTrack: row.round,
+      specialisation: row.specialisation,
+      status: `Rejected at ${row.round}`
+    }
+
+    console.log(data);
+
+    try {
+      console.log("start");
+      const user = await Api.post(
+        "/notif/addNotif",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log("Ernd");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <Sidebar isSidebar={isSidebar} />
       <div className="content">
         <Topbar setIsSidebar={setIsSidebar} />
         <Box m="20px">
-          {/* HEADER */}
           <Box
             display="flex"
-            justifyContent="space-between"
+            justifyContent="center"
             alignItems="center"
           >
             <Header title="DASHBOARD" />
-
-            {/* <Box>
-              <Button
-                sx={{
-                  backgroundColor: colors.blueAccent[700],
-                  color: colors.grey[100],
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                }}
-              >
-                <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-                Download Reports
-              </Button>
-            </Box> */}
           </Box>
 
           {/* GRID & CHARTS */}
@@ -157,56 +222,14 @@ const Dashboard = () => {
                 </Typography>
               </Box>
             </Box>
-
-            {/* ROW 2 */}
-            {/* <Box
-              gridColumn="span 8"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-            >
-              <Box
-                mt="25px"
-                p="0 30px"
-                display="flex "
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box>
-                  <Typography
-                    variant="h5"
-                    fontWeight="600"
-                    color={colors.grey[100]}
-                  >
-                    Revenue Generated
-                  </Typography>
-                  <Typography
-                    variant="h3"
-                    fontWeight="bold"
-                    color={colors.greenAccent[500]}
-                  >
-                    $59,342.32
-                  </Typography>
-                </Box>
-                <Box>
-                  <IconButton>
-                    <DownloadOutlinedIcon
-                      sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                    />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Box height="250px" m="-20px 0 0 0">
-                <LineChart isDashboard={true} />
-              </Box>
-            </Box> */}
+            {userType==='Interviewer'?
             <Box
-              gridColumn="span 4"
+              gridColumn="span 20"
               gridRow="span 2"
               backgroundColor={colors.primary[400]}
               overflow="auto"
             >
               <Box
-                display="flex"
                 justifyContent="space-between"
                 alignItems="center"
                 borderBottom={`4px solid ${colors.primary[500]}`}
@@ -221,95 +244,90 @@ const Dashboard = () => {
                   Recent Interviews
                 </Typography>
               </Box>
-              {mockTransactions.map((idx, i) => (
-                <Box
-                  key={`${idx.txId}-${i}`}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderBottom={`4px solid ${colors.primary[500]}`}
-                  p="15px"
-                >
-                  <Box>
-                    <Typography color={colors.grey[100]}>
-                      {idx.user}
-                    </Typography>
-                  </Box>
-                  <Box color={colors.grey[100]}>{idx.round}</Box>
-                  <Box color={colors.grey[100]}>{idx.specialisation}</Box>
-                  <Box
-                    backgroundColor={colors.greenAccent[500]}
-                    p="5px 10px"
-                    borderRadius="4px"
-                  >
-                    {idx.status}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-
-            {/* ROW 3 */}
-            {/* <Box
-              gridColumn="span 4"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              p="30px"
-            >
-              <Typography variant="h5" fontWeight="600">
-                Campaign
-              </Typography>
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                mt="25px"
-              >
-                <ProgressCircle size="125" />
-                <Typography
-                  variant="h5"
-                  color={colors.greenAccent[500]}
-                  sx={{ mt: "15px" }}
-                >
-                  $48,352 revenue generated
-                </Typography>
-                <Typography>
-                  Includes extra misc expenditures and costs
-                </Typography>
-              </Box>
-            </Box>
+              <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+              <Table sx={{ margin:"auto" }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{backgroundColor:"#3e4396"}}>
+                    <TableCell sx={{textAlign:"center"}}>Name</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Comments</TableCell>
+                    <TableCell align="right" sx={{textAlign:"center"}}>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{backgroundColor:"#141b2d"}}>
+                  {mockNotification.map((row, column) => (
+                    <TableRow
+                      key={row}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      {Object.values(row).map((value, column) => (
+                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                </TableBody>
+                </Table>
+                </TableContainer>
+            </Box>:<></>
+            } 
+            {
+            userType==='Admin'?
             <Box
-              gridColumn="span 4"
+              gridColumn="span 20"
               gridRow="span 2"
               backgroundColor={colors.primary[400]}
+              overflow="auto"
             >
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                sx={{ padding: "30px 30px 0 30px" }}
+              <Box
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                colors={colors.grey[100]}
+                p="15px"
               >
-                Sales Quantity
-              </Typography>
-              <Box height="250px" mt="-20px">
-                <BarChart isDashboard={true} />
+                <Typography
+                  color={colors.grey[100]}
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  Action Required
+                </Typography>
               </Box>
-            </Box> */}
-            {/* <Box
-              gridColumn="span 4"
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              padding="30px"
-            >
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                sx={{ marginBottom: "15px" }}
-              >
-                Geography Based Traffic
-              </Typography>
-              <Box height="200px">
-                <GeographyChart isDashboard={true} />
-              </Box>
-            </Box> */}
+              
+                <TableContainer component={Paper} sx={{marginTop:"10px"}}>
+                <Table sx={{ minWidth: 650,margin:"auto" }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow sx={{backgroundColor:"#3e4396"}}>
+                      <TableCell sx={{textAlign:"center"}}>Name</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 1</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 2</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Round 3</TableCell>
+                      <TableCell align="right" sx={{textAlign:"center"}}>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody sx={{backgroundColor:"#141b2d"}}>
+                    {actionData.map((row, column) => (
+                      <TableRow
+                        key={row}
+                        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      >
+                        {Object.values(row).map((value, column) => (
+                          <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
+                        ))}
+                        <TableCell align="right" key={column} sx={{textAlign:"center"}}>
+                          <Button variant="contained" color="success" sx={{margin: "2px"}} onClick={()=>{handleGoOnclick(row, column)}}>GO</Button>
+                          <Button variant="contained" color="error" sx={{margin: "2px"}} onClick={()=>{handleNoGoOnclick(row, column)}}>NO-GO</Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  </Table>
+                  </TableContainer>
+                </Box>:<></>
+              }
           </Box>
         </Box>
       </div>
