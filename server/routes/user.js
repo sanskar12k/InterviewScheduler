@@ -470,7 +470,7 @@ router.get("/:user_id/allAvailability", async(req, res)=>{
 router.post("/assignInterviewers", async (req, res) => {
     try {
         //Sorted on the basis of number of speciality and then on number of availablity
-        const interviewers = await User.aggregate([
+        const interviewers = await User.aggregate([ //number of available slot and no of specialisation
             {
                 $match: {
                     iTrack: "Technical"
@@ -508,6 +508,7 @@ router.post("/assignInterviewers", async (req, res) => {
                           iv.candidateList.push(cand[k]._id);
                           iv.availablity[idx] = 0;
                           iv.dateNdTime.splice(0, 1);
+                          iv.interviewTaken += 1;
                           await iv.save();
                           await cand[k].save();
                           console.log(iv)
@@ -529,6 +530,7 @@ router.post("/assignInterviewers", async (req, res) => {
         console.log(error)
     }
 })
+
 
 module.exports = router;
 

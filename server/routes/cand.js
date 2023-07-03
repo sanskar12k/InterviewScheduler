@@ -111,5 +111,70 @@ router.get("/allcandidate", async(req, res)=>{
         console.log(error)
     }
 })
+//-1 --> No decision
+// 0--> Rejected
+// 1 --> Next round
+router.patch(`/:cand/goStatus`, async(req, res) =>{
+    try {
+        const cid = new mongoose.Types.ObjectId(req.params.cand);
+        const cand = await Candidate.findById(cid);
+        const{goStatus} = req.body;
+        if(goStatus === 0){
+            cand.GoNgo = 0;
+            await cand.save(); 
+            //Notification
+        }
+        else{
+             //Assign new interviewer
+             if(cand.status[1] === -1){ //last round was technical
+                //Assign managerial
+              const manager =  await User.aggregate([ //number of interviewTaken and no of specialisation
+            {
+                $match: {
+                    iTrack: "Managerial"
+                }
+            },
+            {
+                $project: {
+                    fname: 1,
+                    lname:1,
+                    availablity: 1,
+                    iTrack: 1,
+                    dateLen: { $size: "$dateNdTime" }
+                }
+            },
+            {
+                $sort: {
+                    interviewTaken: 1,
+                    dateLen: 1
+                }
+            }
+        ])
+            
+           for(let i = 0;i<manager.length;i++){
+            const interviewer  = await User.findById(manager[i]._id).populate("dateNdTime");
+            if(interviewer.dateNdTime.length > 0){ //if he has available time slot
+                cand.interViewer = 1;
+                cand.interViewerList[1] = interviewer._id;
+                cand.dateNdTime = interviewer.dateNdTime[0]._id;
+                const idx = interviewer.dateNdTime[0].time; 
+                interviewer.candidateList.push(cand._id);
+                interviewer.availablity[idx] = 0;
+                interviewer.dateNdTime.splice(0, 1);
+                interviewer.interviewTaken += 1;
+                await cand.save();
+                await interviewer.save();
+            }
+           }
+
+             }
+             else if(cand.status[2] === -1){ //last round was managerial
+                //Assign HR
+             }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 module.exports = router;

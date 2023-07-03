@@ -14,12 +14,8 @@ import Header from "../../components/Header";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
-<<<<<<< HEAD
 import Api from '../../api';
-=======
-import { mockAssigned } from "../../data/mockData";
->>>>>>> 55929734b29e22ad7bcd95757d4989b258784ccf
-
+import {mockAssigned} from '../../data/mockData'
 const AlertFunc = React.forwardRef(function AlertFunc(props, ref) {
     return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
   });

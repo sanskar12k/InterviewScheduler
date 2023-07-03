@@ -5,7 +5,7 @@ const User = require('./models/user');
 const Admin = require('./models/admin');
 const {DateModel } = require('./models/date');
 const Candidate = require('./models/candidate');
-
+const Notification = require('./models/notification');
 if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config();
 }
@@ -107,8 +107,9 @@ const seedDB = async () => {
    try{
     const del = await User.deleteMany({});
     const delAdmin = await Admin.deleteMany({});
-    // const date = await Time.deleteMany({});
+    const date = await DateModel.deleteMany({});
     const cand = await Candidate.deleteMany({});
+    const notif = await Notification.deleteMany({});
     for (let i = 0; i < users.length; i++) {
         const user = new User ({fname:users[i].fname, email:users[i].email, iTrack:users[i].iTrack, specialisation:users[i].specialisation, password:users[i].password});
         console.log(user);
