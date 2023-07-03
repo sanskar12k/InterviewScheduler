@@ -35,7 +35,7 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar, user } = useAuth();
-  const [actionData, setActionData] = useState(mockTransactions);
+  const [actionData, setActionData] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const userType = localStorage.getItem('userType');
   const [interviewTaken, setInterviewTaken] = useState(0);
@@ -401,23 +401,28 @@ const Dashboard = () => {
                     </Box>
                   </Box>
             {userType === "Interviewer" ? (
-              <>
+              
               <Box
                 gridColumn="span 20"
                 gridRow="span 2"
                 backgroundColor={colors.primary[400]}
                 overflow="auto"
               >
-                <Typography
+                <Box
                   justifyContent="space-between"
                   alignItems="center"
                   borderBottom={`4px solid ${colors.primary[500]}`}
                   colors={colors.grey[100]}
                   p="15px"
                 >
+                <Typography
+                  color={colors.grey[100]}
+                  variant="h5"
+                  fontWeight="600"
+                >
                   Recent Interviews
                 </Typography>
-              
+              </Box>
               <TableContainer component={Paper} sx={{marginTop:"10px"}}>
               <Table sx={{ margin:"auto" }} aria-label="simple table">
                 <TableHead>
@@ -439,7 +444,7 @@ const Dashboard = () => {
                       key={row}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      {Object.values(row).slice(1,5).map((value, column) => (
+                      {Object.values(row).map((value, column) => (
                         <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
                       ))}
                     </TableRow>
@@ -448,7 +453,7 @@ const Dashboard = () => {
                 </Table>
                 </TableContainer>
                 </Box>
-                </>
+                
             ):<></>
             } 
             {
@@ -506,8 +511,8 @@ const Dashboard = () => {
                         </TableCell>
                       </TableRow>))}
                     </TableBody>
-                    <TableBody sx={{ backgroundColor: "#141b2d" }}>
-                      {mockNotification.map((row, column) => (
+                    {/* { userType === 'Interviewer' && <TableBody sx={{ backgroundColor: "#141b2d" }}>
+                      {actionData.map((row, column) => (
                         <TableRow
                           key={row}
                           sx={{
@@ -525,13 +530,13 @@ const Dashboard = () => {
                           ))}
                         </TableRow>
                       ))}
-                    </TableBody>
+                    </TableBody>} */}
                   </Table>
                 </TableContainer>
               </Box>
-             : (
+             : 
               <></>
-            )}
+            }
             
           </Box>
         </Box>
