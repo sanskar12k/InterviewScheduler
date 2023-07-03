@@ -124,7 +124,13 @@ const Team = () => {
       //     });
       //   }, 100);
       console.log(res.data.candidates.candidateList);
-      setData(res.data.candidates.candidateList);
+      // setData(res.data.candidates.candidateList);
+      setData(
+        res.data.candidates.candidateList.map(e => {
+          e.time = `${e.dateNdTime.time} - ${e.dateNdTime.time + 1}` 
+          return { ...e }
+        })
+      )
       }
       else {
       }
@@ -178,7 +184,7 @@ const Team = () => {
   }
  }
   const columns = [
-    { field: "Time", headerName: "Time" },
+    { field: "time", headerName: "Time" },
     {
       field: "fname",
       headerName: "Name",

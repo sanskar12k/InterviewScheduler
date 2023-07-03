@@ -26,9 +26,9 @@ const userSchema = new Schema({
         enum: ['Technical', 'Managerial', 'HR']
     },
     specialisation:
-    {
-        type: [String]
-    }
+    [{
+        type: String
+    }]
     ,
     password: {
         type: String,

@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
+import Api from '../../api';
 
 const AlertFunc = React.forwardRef(function AlertFunc(props, ref) {
     return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -35,9 +36,9 @@ const AutoGenerate = ({ onSubmit }) => {
     // Add more specialisations as needed
   ];
   const interviewTracks = [
-    "Technical Round",
-    "Managerial Round",
-    "HR Round",
+    "Technical",
+    "Managerial",
+    "HR",
     // Add more interview tracks as needed
   ];
 
@@ -81,6 +82,17 @@ const AutoGenerate = ({ onSubmit }) => {
     setAlert(false);
   };
 
+  const  assignInterview = async() =>{
+    try {
+      const assign = await Api.post("/user/assignInterviewers");
+      if(assign.status === 200)
+      console.log(assign);
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -144,7 +156,7 @@ const AutoGenerate = ({ onSubmit }) => {
             type="submit" 
             variant="contained" 
             style={{backgroundColor:"#016064",fontWeight:"bold"}}
-            onClick={handleAlertOpen}
+            onClick={assignInterview}
             >
               Assign
             </Button>
