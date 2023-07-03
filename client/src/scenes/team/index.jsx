@@ -18,8 +18,9 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { useAuth } from "../../Context/AppContext";
 import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
-import { useEffect, useState } from "react";
-import Api from "../../api";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -186,13 +187,13 @@ const Team = () => {
   const columns = [
     { field: "time", headerName: "Time" },
     {
-      field: "fname",
+      field: "name",
       headerName: "Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
-      field: "phNumber",
+      field: "phone",
       headerName: "Phone Number",
       flex: 1,
     },
@@ -202,7 +203,7 @@ const Team = () => {
       flex: 1,
     },
     {
-      field: "resumeLink",
+      field: "link",
       headerName: "Resume Link",
       flex: 1,
     },
@@ -210,49 +211,88 @@ const Team = () => {
       field: "actions",
       headerName: "Status",
       type:"actions",
-      flex: 0.5,
+      flex: 1,
       cellClassName: 'actions',
       getActions: ({ id }) => {
-
         return [
           <GridActionsCellItem
-            icon={<Checkbox  color="success"/>}
+            icon={
+              <FormControl sx={{ minWidth: 120 }}>
+              {/* <InputLabel id="demo-simple-select-label">Status</InputLabel> */}
+              <Select
+                defaultValue={1}
+                // labelId="demo-simple-select-label"
+                // id="demo-simple-select"
+                // value={"Wail"}
+                // label="Age"
+                // onChange={handleChange}
+              >
+                <MenuItem value={1} disabled>Wait</MenuItem>
+                <MenuItem value={2}>Pass</MenuItem>
+                <MenuItem value={3}>Fail</MenuItem>
+              </Select>
+            </FormControl>
+            }
             label="Edit"
             className="textPrimary"
-            onClick={()=>{statusUpdate(id)}}
             color="inherit"
           />
         ];
       },
+      
     },
     {
       field: "action",
       headerName: "Comment",
-      flex: 1.5,
+      flex: 1,
       type: "actions",
       cellClassName: 'actions',
       getActions: ({ id }) => {
         return [
           // <FormControl fullWidth sx={{ m: 1 }}>
           <TextField
-          id="filled-multiline-static"
-          label="Comment"
+          iid="filled-textarea"
+          // label="Multiline Placeholder"
+          placeholder="Write comment"
           multiline
-          rows={1}
-          sx={{ m: 1, width: '25ch' }}
-          margin="none"
-          padding="normal"
-          onBlur={(e)=>{addComment(e, id)}}
-          fullWidth
-          // variant="outline"
+          variant="standard"
         />
         // </FormControl>
         ];
       },
     },
+    // {
+    //   field: "accessLevel",
+    //   headerName: "Access Level",
+    //   flex: 1,
+    //   renderCell: ({ row: { access } }) => {
+    //     return (
+    //       <Box
+    //         width="60%"
+    //         m="0 auto"
+    //         p="5px"
+    //         display="flex"
+    //         justifyContent="center"
+    //         backgroundColor={
+    //           access === "admin"
+    //             ? colors.greenAccent[600]
+    //             : access === "manager"
+    //             ? colors.greenAccent[700]
+    //             : colors.greenAccent[700]
+    //         }
+    //         borderRadius="4px"
+    //       >
+    //         {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
+    //         {access === "manager" && <SecurityOutlinedIcon />}
+    //         {access === "user" && <LockOpenOutlinedIcon />}
+    //         <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+    //           {access}
+    //         </Typography>
+    //       </Box>
+    //     );
+    //   },
+    // },
   ];
-
-
   return (
     <>
     <Sidebar isSidebar={isSidebar} />
@@ -289,7 +329,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid checkboxSelection onSelectionModelChange={handleSelectionChange} getRowId={(row) => row._id}  rows={data} columns={columns} />
+        <DataGrid  rows={mockDataTeam} columns={columns} rowHeight={70}/>
       </Box>
     </Box>
     </div>

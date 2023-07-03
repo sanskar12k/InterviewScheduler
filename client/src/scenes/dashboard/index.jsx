@@ -22,7 +22,7 @@ import Sidebar from "../global/Sidebar";
 import Topbar from "../global/Topbar";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Api from "../../api";
 
 const Dashboard = () => {
@@ -30,7 +30,43 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const { isSidebar, setIsSidebar } = useAuth();
   const [actionData, setActionData] = useState(mockTransactions);
+  const [notifications, setNotifications] = useState([]);
   const userType = localStorage.getItem('userType');
+  const [iTaken, setITaken] = useState(0);
+  const user_id = localStorage.getItem('users');
+
+  const fetchData = async ()=>{
+    
+  }
+
+  const fetchNotifs = async ()=>{
+    try {
+      console.log("start");
+      const user = await Api.get(
+        "/notif/getNotif",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = user.data.notif;
+      setNotifications(data.reverse().slice(0,4));
+      // console.log(user);
+      // console.log(user.data.notif);
+      console.log(notifications);
+      console.log("Ernd");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchNotifs();
+    // eslint-disable-next-line
+  }, []);
 
   const handleGoOnclick = async (row, column)=>{
     console.log(row);
@@ -251,17 +287,16 @@ const Dashboard = () => {
                     <TableCell sx={{textAlign:"center"}}>Name</TableCell>
                     <TableCell align="right" sx={{textAlign:"center"}}>Round</TableCell>
                     <TableCell align="right" sx={{textAlign:"center"}}>Specialisation</TableCell>
-                    <TableCell align="right" sx={{textAlign:"center"}}>Comments</TableCell>
                     <TableCell align="right" sx={{textAlign:"center"}}>Status</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{backgroundColor:"#141b2d"}}>
-                  {mockNotification.map((row, column) => (
+                  {notifications.map((row, column) => (
                     <TableRow
                       key={row}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      {Object.values(row).map((value, column) => (
+                      {Object.values(row).slice(1,5).map((value, column) => (
                         <TableCell align="right" key={column} sx={{textAlign:"center"}}>{value} </TableCell>
                       ))}
                     </TableRow>
