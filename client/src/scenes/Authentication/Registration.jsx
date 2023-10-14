@@ -42,7 +42,7 @@ const Registration = () => {
 
   const interviewTracks = [
     "Technical",
-    "Manegerial",
+    "Managerial",
     "HR",
     // Add more interview tracks as needed
   ];

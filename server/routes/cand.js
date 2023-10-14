@@ -169,7 +169,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                 interviewer.availablity[idx] = 0;
                 interviewer.dateNdTime.splice(0, 1);
                 // interviewer.interviewTaken += 1;
-                iv_name = interviewer.fname + interviewer.lname;
+                iv_name = interviewer.fname;
                 await cand.save();
                 await interviewer.save();
                 break; //break after interviewer assigned
@@ -215,8 +215,7 @@ router.patch(`/:cand/goStatus`, async(req, res) =>{
                     interviewer.candidateList.push(cand._id);
                     interviewer.availablity[idx] = 0;
                     interviewer.dateNdTime.splice(0, 1);
-                    // interviewer.interviewTaken += 1;
-                    iv_name = interviewer.fname + interviewer.lname;
+                    iv_name = interviewer.fname;
                     await cand.save();
                     await interviewer.save();
                     break; //break after interviewer assigned

@@ -132,16 +132,6 @@ router.patch("/removeTime", async(req, res)=>{
         const interv = await User.findById(user);
         interv.availablity[time.time] = 0;
         const remTime = await DateModel.findByIdAndDelete(_id);
-        // const dateId = time_id.dateNdTime[0]._id;
-        // if(dateId){
-        //     const removeTime = await User.findByIdAndUpdate(user, {$pull:{
-        //     dateNdTime:dateId
-        // }},{new:true});
-        // const userAva = await User.findById(user);
-        // userAva.availablity[time] = 0;
-        // await userAva.save();
-        // console.log(userAva);
-        // const removeDate = awa.it DateModel.findByIdAndDelete(dateId);
         console.log(time);
         res.status(200).json({
             time_id,
